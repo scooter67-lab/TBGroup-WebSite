@@ -1,0 +1,19 @@
+{
+  "name": "tbgroup-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TB Group corporate website — monorepo",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\" \"npm run dev:admin\"",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "dev:admin": "npm run dev --prefix admin",
+    "build": "npm run build --prefix client && npm run build --prefix admin",
+    "start:server": "npm start --prefix server",
+    "seed": "npm run seed --prefix server",
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client && npm install --prefix admin"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
