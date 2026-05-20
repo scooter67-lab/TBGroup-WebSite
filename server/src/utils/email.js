@@ -31,10 +31,15 @@ export const sendContactEmail = async (data) => {
     <p>${data.message || '—'}</p>
   `;
 
-  await transporter.sendMail({
-    from: process.env.MAIL_FROM || process.env.SMTP_USER,
-    to: process.env.MAIL_TO || process.env.SMTP_USER,
-    subject: `Заявка с сайта — ${data.name}`,
-    html,
-  });
+  try {
+    await transporter.sendMail({
+      from: process.env.MAIL_FROM || process.env.SMTP_USER,
+      to: process.env.MAIL_TO || process.env.SMTP_USER,
+      subject: `Заявка с сайта — ${data.name}`,
+      html,
+    });
+  } catch (err) {
+    console.error('SMTP send failed:', err.message);
+    throw err;
+  }
 };

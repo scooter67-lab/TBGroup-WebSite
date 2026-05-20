@@ -1,14 +1,18 @@
 import Settings from '../models/Settings.js';
 import Banner from '../models/Banner.js';
+import { defaultPages } from '../data/defaultPages.js';
+import { deepMerge } from '../utils/deepMerge.js';
 
 export const getPublicSettings = async (_req, res) => {
   const settings = await Settings.find({
-    key: { $in: ['contacts', 'stats', 'seo', 'social'] },
+    key: { $in: ['contacts', 'stats', 'seo', 'social', 'pages'] },
   });
   const result = {};
   settings.forEach((s) => {
     result[s.key] = s.value;
   });
+  result.pages = deepMerge(defaultPages, result.pages || {});
+  result.banners = await Banner.find({ active: true }).sort({ order: 1 });
   res.json(result);
 };
 

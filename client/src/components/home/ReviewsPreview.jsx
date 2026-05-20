@@ -2,9 +2,12 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import api from '../../api/axios';
+import { useSettings } from '../../context/SettingsContext';
 import { Section } from './Section';
 
 export default function ReviewsPreview() {
+  const { pages } = useSettings();
+  const block = pages.home?.reviews;
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
@@ -12,7 +15,7 @@ export default function ReviewsPreview() {
   }, []);
 
   return (
-    <Section id="reviews" subtitle="Отзывы" title="Нам доверяют">
+    <Section id="reviews" subtitle={block?.subtitle} title={block?.title}>
       <div className="grid md:grid-cols-3 gap-6">
         {reviews.map((r, i) => (
           <motion.div
@@ -23,9 +26,7 @@ export default function ReviewsPreview() {
             transition={{ delay: i * 0.1 }}
             className="glass rounded-2xl p-6"
           >
-            <div className="flex gap-1 mb-3 text-yellow-400">
-              {'★'.repeat(r.rating || 5)}
-            </div>
+            <div className="flex gap-1 mb-3 text-yellow-400">{'★'.repeat(r.rating || 5)}</div>
             <p className="text-brand-muted dark:text-gray-300 mb-4">&ldquo;{r.text}&rdquo;</p>
             <p className="font-semibold">{r.author}</p>
             <p className="text-sm text-brand-muted">{r.company}</p>
@@ -34,7 +35,7 @@ export default function ReviewsPreview() {
       </div>
       <div className="text-center mt-10">
         <Link to="/reviews" className="btn-primary">
-          Все отзывы
+          {block?.ctaLabel || 'Все отзывы'}
         </Link>
       </div>
     </Section>

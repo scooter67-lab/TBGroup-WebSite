@@ -13,8 +13,11 @@ router.post(
   '/',
   [
     body('name').trim().notEmpty().withMessage('Укажите имя'),
-    body('email').optional().isEmail().withMessage('Некорректный email'),
-    body('phone').optional().trim(),
+    body('email').optional({ values: 'falsy' }).isEmail().withMessage('Некорректный email'),
+    body('phone').optional({ values: 'falsy' }).trim(),
+    body('company').optional({ values: 'falsy' }).trim(),
+    body('message').optional({ values: 'falsy' }).trim(),
+    body('service').optional({ values: 'falsy' }).trim(),
   ],
   submitContact
 );

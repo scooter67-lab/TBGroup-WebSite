@@ -4,6 +4,7 @@ import Review from '../models/Review.js';
 import Service from '../models/Service.js';
 import Settings from '../models/Settings.js';
 import Banner from '../models/Banner.js';
+import { defaultPages } from '../data/defaultPages.js';
 
 export const seedAdmin = async () => {
   const email = process.env.ADMIN_EMAIL || 'admin@tbgroup.ru';
@@ -243,6 +244,7 @@ const settingsData = [
       telegram: 'https://t.me/tbgroup',
     },
   },
+  { key: 'pages', value: defaultPages },
 ];
 
 export const runSeed = async () => {

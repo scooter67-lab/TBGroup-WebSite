@@ -8,6 +8,7 @@ import ReviewsAdmin from './pages/ReviewsAdmin';
 import ServicesAdmin from './pages/ServicesAdmin';
 import BannersAdmin from './pages/BannersAdmin';
 import SettingsAdmin from './pages/SettingsAdmin';
+import PagesAdmin from './pages/PagesAdmin';
 import ContactsAdmin from './pages/ContactsAdmin';
 
 function PrivateRoute({ children }) {
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="reviews" element={<ReviewsAdmin />} />
         <Route path="services" element={<ServicesAdmin />} />
         <Route path="banners" element={<BannersAdmin />} />
+        <Route path="pages" element={<PagesAdmin />} />
         <Route path="settings" element={<SettingsAdmin />} />
         <Route path="contacts" element={<ContactsAdmin />} />
       </Route>

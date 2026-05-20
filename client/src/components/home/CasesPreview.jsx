@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import api from '../../api/axios';
+import { useSettings } from '../../context/SettingsContext';
 import { Section } from './Section';
 import { CardSkeleton } from '../ui/Skeleton';
 
 export default function CasesPreview() {
+  const { pages } = useSettings();
+  const block = pages.home?.cases;
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,7 +21,7 @@ export default function CasesPreview() {
   }, []);
 
   return (
-    <Section id="cases" subtitle="Кейсы" title="Результаты наших проектов" dark>
+    <Section id="cases" subtitle={block?.subtitle} title={block?.title} dark>
       {loading ? (
         <div className="grid md:grid-cols-3 gap-6">
           {[1, 2, 3].map((n) => (
@@ -52,7 +55,7 @@ export default function CasesPreview() {
       )}
       <div className="text-center mt-10">
         <Link to="/cases" className="btn-outline border-white text-white hover:bg-white hover:text-brand-navy">
-          Все кейсы
+          {block?.ctaLabel || 'Все кейсы'}
         </Link>
       </div>
     </Section>

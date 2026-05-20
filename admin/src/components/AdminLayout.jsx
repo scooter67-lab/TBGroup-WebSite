@@ -7,6 +7,7 @@ const nav = [
   { to: '/reviews', label: 'Отзывы' },
   { to: '/services', label: 'Услуги' },
   { to: '/banners', label: 'Баннеры' },
+  { to: '/pages', label: 'Блоки сайта' },
   { to: '/contacts', label: 'Заявки' },
   { to: '/settings', label: 'Настройки' },
 ];

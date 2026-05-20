@@ -1,20 +1,18 @@
 import { motion } from 'framer-motion';
+import { useSettings } from '../../context/SettingsContext';
 import { Section } from './Section';
 
-const benefits = [
-  { title: 'Опыт 8+ лет', desc: 'Сотни внедрений в торговле, производстве и услугах' },
-  { title: 'Комплексный подход', desc: 'От аудита до поддержки и обучения персонала' },
-  { title: 'Сертифицированные партнёры', desc: 'Официальные интеграторы МойСклад и Битрикс24' },
-  { title: 'Прозрачные сроки', desc: 'Фиксированные этапы и отчётность по проекту' },
-];
-
 export default function Benefits() {
+  const { pages } = useSettings();
+  const block = pages.home?.benefits;
+  const items = block?.items || [];
+
   return (
-    <Section subtitle="Преимущества" title="Почему выбирают TB Group">
+    <Section subtitle={block?.subtitle} title={block?.title}>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {benefits.map((b, i) => (
+        {items.map((b, i) => (
           <motion.div
-            key={b.title}
+            key={`${b.title}-${i}`}
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}

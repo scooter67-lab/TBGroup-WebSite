@@ -2,12 +2,62 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useSettings } from '../../context/SettingsContext';
 
+const defaults = {
+  badge: 'Облачные решения для бизнеса',
+  title: (
+    <>
+      Внедряем <span className="text-brand-accent">МойСклад</span>,{' '}
+      <span className="text-brand-accent">Битрикс24</span> и телефонию
+    </>
+  ),
+  subtitle:
+    'TB Group — интеграция облачных систем, автоматизация процессов и CRM. От аудита до сопровождения.',
+  ctaPrimary: { to: '/contacts', label: 'Бесплатная консультация' },
+  ctaSecondary: { to: '/cases', label: 'Смотреть кейсы' },
+};
+
+function BannerLink({ href, className, children }) {
+  const external = href.startsWith('http');
+  if (external) {
+    return (
+      <a href={href} target="_blank" rel="noreferrer" className={className}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link to={href} className={className}>
+      {children}
+    </Link>
+  );
+}
+
 export default function Hero() {
-  const { settings } = useSettings();
+  const { settings, pages, getBanner, loading } = useSettings();
+  const banner = getBanner('hero');
+  const heroBlock = pages.home?.hero;
   const stats = settings.stats || { projects: 150, clients: 80, years: 8, integrations: 300 };
+
+  const title = banner?.title ? <span>{banner.title}</span> : defaults.title;
+  const subtitle = banner?.subtitle || defaults.subtitle;
+  const primary = banner?.link
+    ? { to: banner.link, label: 'Подробнее' }
+    : defaults.ctaPrimary;
+  const secondary = {
+    to: heroBlock?.ctaSecondaryLink || defaults.ctaSecondary.to,
+    label: heroBlock?.ctaSecondaryLabel || defaults.ctaSecondary.label,
+  };
+  const badge = heroBlock?.badge || defaults.badge;
 
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-brand-navy text-white">
+      {banner?.image && (
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-25"
+          style={{ backgroundImage: `url(${banner.image})` }}
+          aria-hidden
+        />
+      )}
       <div className="absolute inset-0 opacity-30">
         <div
           className="absolute inset-0 bg-gradient-to-br from-brand-accent/40 via-transparent to-brand-navy animate-gradient-x"
@@ -24,24 +74,20 @@ export default function Hero() {
           transition={{ duration: 0.7 }}
           className="max-w-3xl"
         >
-          <span className="inline-block px-4 py-1.5 rounded-full glass text-sm text-brand-accent mb-6">
-            Облачные решения для бизнеса
-          </span>
-          <h1 className="heading-1 mb-6">
-            Внедряем <span className="text-brand-accent">МойСклад</span>,{' '}
-            <span className="text-brand-accent">Битрикс24</span> и телефонию
-          </h1>
-          <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl">
-            TB Group — интеграция облачных систем, автоматизация процессов и CRM. От аудита до
-            сопровождения.
-          </p>
+          {!loading && (
+            <span className="inline-block px-4 py-1.5 rounded-full glass text-sm text-brand-accent mb-6">
+              {badge}
+            </span>
+          )}
+          <h1 className="heading-1 mb-6">{title}</h1>
+          <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl">{subtitle}</p>
           <div className="flex flex-wrap gap-4">
-            <Link to="/contacts" className="btn-primary">
-              Бесплатная консультация
-            </Link>
-            <Link to="/cases" className="btn-outline border-white text-white hover:bg-white hover:text-brand-navy">
-              Смотреть кейсы
-            </Link>
+            <BannerLink href={primary.to} className="btn-primary">
+              {primary.label}
+            </BannerLink>
+            <BannerLink href={secondary.to} className="btn-outline border-white text-white hover:bg-white hover:text-brand-navy">
+              {secondary.label}
+            </BannerLink>
           </div>
         </motion.div>
 

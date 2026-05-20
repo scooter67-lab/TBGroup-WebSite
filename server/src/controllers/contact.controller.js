@@ -7,7 +7,10 @@ import { verifyRecaptcha } from '../utils/recaptcha.js';
 export const submitContact = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({
+      message: errors.array()[0]?.msg || 'Ошибка валидации',
+      errors: errors.array(),
+    });
   }
 
   const validCaptcha = await verifyRecaptcha(req.body.recaptchaToken);
@@ -16,19 +19,38 @@ export const submitContact = async (req, res) => {
   }
 
   const data = {
-    name: req.body.name,
-    email: req.body.email,
-    phone: req.body.phone,
-    company: req.body.company,
-    message: req.body.message,
-    service: req.body.service,
+    name: req.body.name?.trim(),
+    email: req.body.email?.trim() || '',
+    phone: req.body.phone?.trim() || '',
+    company: req.body.company?.trim() || '',
+    message: req.body.message?.trim() || '',
+    service: req.body.service?.trim() || '',
     source: req.body.source || 'website',
   };
 
-  const bitrixLeadId = await createBitrixLead(data);
-  await sendContactEmail(data);
+  let request;
+  try {
+    request = await ContactRequest.create({ ...data, status: 'new' });
+  } catch (err) {
+    console.error('ContactRequest save error:', err);
+    return res.status(500).json({ message: 'Не удалось сохранить заявку' });
+  }
 
-  const request = await ContactRequest.create({ ...data, bitrixLeadId });
+  try {
+    const bitrixLeadId = await createBitrixLead(data);
+    if (bitrixLeadId) {
+      request.bitrixLeadId = bitrixLeadId;
+      await request.save();
+    }
+  } catch (err) {
+    console.error('Bitrix24 sync error:', err.message);
+  }
+
+  try {
+    await sendContactEmail(data);
+  } catch (err) {
+    console.error('Contact email error:', err.message);
+  }
 
   res.status(201).json({
     message: 'Заявка успешно отправлена',

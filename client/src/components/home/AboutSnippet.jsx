@@ -1,17 +1,18 @@
+import { useSettings } from '../../context/SettingsContext';
 import { Section } from './Section';
 
 export default function AboutSnippet() {
+  const { pages } = useSettings();
+  const block = pages.home?.about;
+
   return (
-    <Section id="about" subtitle="О компании" title="TB Group — ваш IT-партнёр">
+    <Section id="about" subtitle={block?.subtitle} title={block?.title}>
       <div className="max-w-3xl mx-auto text-center text-lg text-brand-muted dark:text-gray-300 leading-relaxed">
-        <p className="mb-4">
-          Мы специализируемся на внедрении и интеграции облачных решений для малого и среднего бизнеса.
-          Наша команда объединяет экспертизу в МойСклад, Битрикс24 и IP-телефонии.
-        </p>
-        <p>
-          Помогаем автоматизировать склад, продажи и коммуникации — от первого аудита до долгосрочного
-          сопровождения.
-        </p>
+        {(block?.paragraphs || []).map((p, i) => (
+          <p key={i} className={i < (block.paragraphs.length - 1) ? 'mb-4' : ''}>
+            {p}
+          </p>
+        ))}
       </div>
     </Section>
   );

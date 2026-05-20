@@ -16,7 +16,11 @@ export default function ContactForm({ service = '', compact = false }) {
       toast.success('Заявка отправлена! Мы свяжемся с вами в ближайшее время.');
       reset();
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Ошибка отправки. Попробуйте позже.');
+      const msg =
+        err.response?.data?.message ||
+        err.response?.data?.errors?.[0]?.msg ||
+        'Ошибка отправки. Попробуйте позже.';
+      toast.error(msg);
     }
   };
 
