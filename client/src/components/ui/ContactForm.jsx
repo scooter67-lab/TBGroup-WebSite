@@ -2,6 +2,8 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
 
+const phonePattern = /^[\d\s+()-]{10,20}$/;
+
 export default function ContactForm({ service = '', compact = false }) {
   const {
     register,
@@ -11,8 +13,23 @@ export default function ContactForm({ service = '', compact = false }) {
   } = useForm();
 
   const onSubmit = async (data) => {
+    const phone = data.phone?.trim();
+    const email = data.email?.trim();
+
+    if (!phone && !email) {
+      toast.error('Укажите телефон или email');
+      return;
+    }
+
     try {
-      await api.post('/contact', { ...data, service });
+      await api.post('/lead', {
+        name: data.name?.trim(),
+        phone: phone || undefined,
+        email: email || undefined,
+        message: data.message?.trim() || '',
+        company: data.company?.trim() || '',
+        service: service || data.service?.trim() || '',
+      });
       toast.success('Заявка отправлена! Мы свяжемся с вами в ближайшее время.');
       reset();
     } catch (err) {
@@ -39,16 +56,19 @@ export default function ContactForm({ service = '', compact = false }) {
         <div>
           <label className="block text-sm font-medium mb-1">Телефон</label>
           <input
-            {...register('phone')}
+            {...register('phone', {
+              pattern: { value: phonePattern, message: 'Некорректный номер телефона' },
+            })}
             className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-brand-navy-light dark:bg-brand-navy-light focus:ring-2 focus:ring-brand-accent outline-none"
             placeholder="+7 (___) ___-__-__"
           />
+          {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Email</label>
           <input
             {...register('email', {
-              pattern: { value: /^\S+@\S+$/i, message: 'Некорректный email' },
+              pattern: { value: /^\S+@\S+\.\S+$/i, message: 'Некорректный email' },
             })}
             className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-brand-navy-light dark:bg-brand-navy-light focus:ring-2 focus:ring-brand-accent outline-none"
             placeholder="email@company.ru"
@@ -64,6 +84,7 @@ export default function ContactForm({ service = '', compact = false }) {
           />
         </div>
       </div>
+      <p className="text-xs text-brand-muted dark:text-gray-500">* Имя обязательно. Укажите телефон или email.</p>
       <div>
         <label className="block text-sm font-medium mb-1">Сообщение</label>
         <textarea

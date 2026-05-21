@@ -12,6 +12,7 @@ import casesRoutes from './routes/cases.routes.js';
 import reviewsRoutes from './routes/reviews.routes.js';
 import servicesRoutes from './routes/services.routes.js';
 import contactRoutes from './routes/contact.routes.js';
+import leadRoutes from './routes/lead.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
 import settingsRoutes from './routes/settings.routes.js';
 import statsRoutes from './routes/stats.routes.js';
@@ -42,12 +43,15 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-const contactLimiter = rateLimit({
+const leadLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   max: 10,
   message: { message: 'Слишком много заявок. Попробуйте позже.' },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
-app.use('/api/contact', contactLimiter);
+app.use('/api/contact', leadLimiter);
+app.use('/api/lead', leadLimiter);
 
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
@@ -56,6 +60,7 @@ app.use('/api/cases', casesRoutes);
 app.use('/api/reviews', reviewsRoutes);
 app.use('/api/services', servicesRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/lead', leadRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/stats', statsRoutes);

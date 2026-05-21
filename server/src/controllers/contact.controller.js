@@ -1,9 +1,11 @@
 import { validationResult } from 'express-validator';
 import ContactRequest from '../models/ContactRequest.js';
-import { sendContactEmail } from '../utils/email.js';
-import { createBitrixLead } from '../utils/bitrix.js';
-import { verifyRecaptcha } from '../utils/recaptcha.js';
+import { submitLead } from '../services/lead.service.js';
+import { Bitrix24Error } from '../services/bitrix24.service.js';
 
+/**
+ * POST /api/contact — совместимость со старым URL (логика как у /api/lead).
+ */
 export const submitContact = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -13,49 +15,27 @@ export const submitContact = async (req, res) => {
     });
   }
 
-  const validCaptcha = await verifyRecaptcha(req.body.recaptchaToken);
-  if (!validCaptcha && process.env.RECAPTCHA_SECRET_KEY) {
-    return res.status(400).json({ message: 'Проверка captcha не пройдена' });
-  }
-
-  const data = {
-    name: req.body.name?.trim(),
-    email: req.body.email?.trim() || '',
-    phone: req.body.phone?.trim() || '',
-    company: req.body.company?.trim() || '',
-    message: req.body.message?.trim() || '',
-    service: req.body.service?.trim() || '',
-    source: req.body.source || 'website',
-  };
-
-  let request;
   try {
-    request = await ContactRequest.create({ ...data, status: 'new' });
+    const { request, bitrixLeadId } = await submitLead(req.body);
+
+    return res.status(201).json({
+      message: 'Заявка успешно отправлена',
+      id: request._id,
+      bitrixLeadId: bitrixLeadId || undefined,
+    });
   } catch (err) {
-    console.error('ContactRequest save error:', err);
-    return res.status(500).json({ message: 'Не удалось сохранить заявку' });
-  }
-
-  try {
-    const bitrixLeadId = await createBitrixLead(data);
-    if (bitrixLeadId) {
-      request.bitrixLeadId = bitrixLeadId;
-      await request.save();
+    if (err instanceof Bitrix24Error) {
+      return res.status(err.statusCode).json({
+        message: err.message,
+        crmUnavailable: true,
+      });
     }
-  } catch (err) {
-    console.error('Bitrix24 sync error:', err.message);
-  }
 
-  try {
-    await sendContactEmail(data);
-  } catch (err) {
-    console.error('Contact email error:', err.message);
+    const status = err.statusCode || 500;
+    return res.status(status).json({
+      message: err.message || 'Ошибка отправки заявки',
+    });
   }
-
-  res.status(201).json({
-    message: 'Заявка успешно отправлена',
-    id: request._id,
-  });
 };
 
 export const getContactRequests = async (req, res) => {
