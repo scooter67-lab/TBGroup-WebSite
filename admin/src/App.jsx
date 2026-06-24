@@ -10,6 +10,7 @@ import BannersAdmin from './pages/BannersAdmin';
 import SettingsAdmin from './pages/SettingsAdmin';
 import PagesAdmin from './pages/PagesAdmin';
 import ContactsAdmin from './pages/ContactsAdmin';
+import ProfileAdmin from './pages/ProfileAdmin';
 
 function PrivateRoute({ children }) {
   const { isAuth, loading } = useAuth();
@@ -37,6 +38,7 @@ export default function App() {
         <Route path="pages" element={<PagesAdmin />} />
         <Route path="settings" element={<SettingsAdmin />} />
         <Route path="contacts" element={<ContactsAdmin />} />
+        <Route path="profile" element={<ProfileAdmin />} />
       </Route>
     </Routes>
   );

@@ -1,4 +1,4 @@
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const nav = [
@@ -43,9 +43,14 @@ export default function AdminLayout() {
         </nav>
         <div className="p-4 border-t border-white/10">
           <p className="text-sm text-gray-400 truncate">{user?.email}</p>
-          <button type="button" onClick={handleLogout} className="mt-2 text-sm text-red-300 hover:text-red-200">
-            Выйти
-          </button>
+          <div className="mt-2 flex gap-3">
+            <Link to="/profile" className="text-sm text-gray-300 hover:text-white">
+              Профиль
+            </Link>
+            <button type="button" onClick={handleLogout} className="text-sm text-red-300 hover:text-red-200">
+              Выйти
+            </button>
+          </div>
         </div>
       </aside>
       <main className="flex-1 overflow-auto p-6 md:p-8">

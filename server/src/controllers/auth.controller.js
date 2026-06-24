@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { validationResult } from 'express-validator';
 import User from '../models/User.js';
 
 const signToken = (id) =>
@@ -22,4 +23,19 @@ export const login = async (req, res) => {
 
 export const getMe = async (req, res) => {
   res.json({ user: req.user });
+};
+
+export const changePassword = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ message: errors.array()[0].msg });
+  }
+  const { currentPassword, newPassword } = req.body;
+  const user = await User.findById(req.user._id).select('+password');
+  if (!user || !(await user.comparePassword(currentPassword))) {
+    return res.status(400).json({ message: 'Неверный текущий пароль' });
+  }
+  user.password = newPassword;
+  await user.save();
+  res.json({ message: 'Пароль успешно изменён' });
 };
