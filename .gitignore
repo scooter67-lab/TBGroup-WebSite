@@ -5,6 +5,7 @@ build/
 .env.local
 uploads/*
 !uploads/.gitkeep
+certbot/
 *.log
 .DS_Store
 coverage/
