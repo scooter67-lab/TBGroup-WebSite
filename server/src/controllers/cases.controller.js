@@ -9,10 +9,11 @@ export const getCases = async (req, res) => {
   if (featured === 'true') filter.featured = true;
   if (service) filter.services = service;
   if (search) {
+    const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     filter.$or = [
-      { title: { $regex: search, $options: 'i' } },
-      { client: { $regex: search, $options: 'i' } },
-      { industry: { $regex: search, $options: 'i' } },
+      { title: { $regex: escaped, $options: 'i' } },
+      { client: { $regex: escaped, $options: 'i' } },
+      { industry: { $regex: escaped, $options: 'i' } },
     ];
   }
 

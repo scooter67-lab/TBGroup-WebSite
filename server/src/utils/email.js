@@ -1,5 +1,8 @@
 import nodemailer from 'nodemailer';
 
+const esc = (str) =>
+  String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
 const createTransporter = () => {
   if (!process.env.SMTP_HOST) return null;
   return nodemailer.createTransport({
@@ -22,13 +25,13 @@ export const sendContactEmail = async (data) => {
 
   const html = `
     <h2>Новая заявка с сайта TB Group</h2>
-    <p><strong>Имя:</strong> ${data.name}</p>
-    <p><strong>Email:</strong> ${data.email || '—'}</p>
-    <p><strong>Телефон:</strong> ${data.phone || '—'}</p>
-    <p><strong>Компания:</strong> ${data.company || '—'}</p>
-    <p><strong>Услуга:</strong> ${data.service || '—'}</p>
+    <p><strong>Имя:</strong> ${esc(data.name)}</p>
+    <p><strong>Email:</strong> ${esc(data.email) || '—'}</p>
+    <p><strong>Телефон:</strong> ${esc(data.phone) || '—'}</p>
+    <p><strong>Компания:</strong> ${esc(data.company) || '—'}</p>
+    <p><strong>Услуга:</strong> ${esc(data.service) || '—'}</p>
     <p><strong>Сообщение:</strong></p>
-    <p>${data.message || '—'}</p>
+    <p>${esc(data.message) || '—'}</p>
   `;
 
   try {

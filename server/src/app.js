@@ -53,6 +53,17 @@ const leadLimiter = rateLimit({
 app.use('/api/contact', leadLimiter);
 app.use('/api/lead', leadLimiter);
 
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { message: 'Слишком много попыток входа. Попробуйте позже.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api/auth/login', authLimiter);
+
+
+
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use('/api/auth', authRoutes);

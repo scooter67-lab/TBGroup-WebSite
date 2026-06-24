@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import 'express-async-errors';
 import app from './app.js';
 import connectDB from './config/db.js';
 import { seedAdmin, runSeed } from './seeders/seed.js';
