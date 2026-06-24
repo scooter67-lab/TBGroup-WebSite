@@ -2,6 +2,7 @@ export function deepMerge(target, source) {
   if (!source) return { ...target };
   const out = Array.isArray(target) ? [...target] : { ...target };
   for (const key of Object.keys(source)) {
+    if (key === '__proto__' || key === 'constructor' || key === 'prototype') continue;
     const srcVal = source[key];
     const tgtVal = out[key];
     if (Array.isArray(srcVal)) {

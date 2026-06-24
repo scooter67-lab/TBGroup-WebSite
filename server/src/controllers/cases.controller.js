@@ -7,7 +7,7 @@ export const getCases = async (req, res) => {
   else if (req.query.all !== 'true') filter.published = true;
 
   if (featured === 'true') filter.featured = true;
-  if (service) filter.services = service;
+  if (service) filter.services = String(service);
   if (search) {
     const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     filter.$or = [

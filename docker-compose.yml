@@ -7,8 +7,10 @@ services:
     restart: unless-stopped
     volumes:
       - mongo_data:/data/db
+    # Только localhost хоста (для админ-инструментов), не наружу.
+    # Серверу этот проброс не нужен — он ходит по внутренней сети tbgroup-net.
     ports:
-      - '27017:27017'
+      - '127.0.0.1:27017:27017'
     networks:
       - tbgroup-net
 

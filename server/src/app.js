@@ -21,6 +21,10 @@ import { errorHandler, notFound } from './middleware/error.middleware.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
+// За обратным прокси (nginx): доверяем одному прокси, чтобы req.ip был
+// реальным IP клиента — иначе rate-limit считается глобально для всех.
+app.set('trust proxy', 1);
+
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(compression());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
