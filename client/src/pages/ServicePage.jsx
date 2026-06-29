@@ -98,7 +98,7 @@ export default function ServicePage() {
       </section>
 
       {content?.advantages?.length > 0 ? (
-        <section className="section-padding bg-brand-gray dark:bg-brand-navy/50">
+        <section className="pt-8 md:pt-10 pb-16 md:pb-24 px-4 sm:px-6 lg:px-8 bg-brand-gray dark:bg-brand-navy/50">
           <div className="container-narrow">
             <h2 className="heading-2 mb-8 text-center">{content.advantagesTitle}</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
