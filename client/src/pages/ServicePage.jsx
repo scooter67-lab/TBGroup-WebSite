@@ -6,6 +6,7 @@ import SEO from '../components/ui/SEO';
 import Breadcrumbs from '../components/layout/Breadcrumbs';
 import ContactForm from '../components/ui/ContactForm';
 import { CardSkeleton } from '../components/ui/Skeleton';
+import { serviceContent } from '../data/serviceContent';
 
 const fallback = {
   moysklad: {
@@ -44,6 +45,7 @@ export default function ServicePage() {
   const { slug } = useParams();
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
+  const content = serviceContent[slug];
 
   useEffect(() => {
     api
@@ -109,6 +111,68 @@ export default function ServicePage() {
           </div>
         </div>
       </section>
+
+      {content && (
+        <section className="section-padding">
+          <div className="container-narrow">
+            {content.intro && (
+              <p className="text-lg md:text-xl text-brand-muted dark:text-gray-300 max-w-3xl mx-auto text-center mb-12">
+                {content.intro}
+              </p>
+            )}
+
+            <h2 className="heading-2 mb-10 text-center">Возможности платформы</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {content.capabilities.map((cap, i) => (
+                <motion.div
+                  key={cap.title}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: (i % 3) * 0.05 }}
+                  className="glass rounded-2xl p-6 flex flex-col"
+                >
+                  <span className="text-3xl mb-3 block">{cap.icon}</span>
+                  <h3 className="font-bold mb-3">{cap.title}</h3>
+                  <ul className="space-y-2">
+                    {cap.items.map((item) => (
+                      <li key={item} className="flex gap-2 text-sm text-brand-muted dark:text-gray-300">
+                        <span className="text-brand-accent flex-shrink-0">✓</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              ))}
+            </div>
+
+            {content.advantages?.length > 0 && (
+              <div className="mt-16">
+                <h2 className="heading-2 mb-8 text-center">{content.advantagesTitle}</h2>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
+                  {content.advantages.map((adv) => (
+                    <div
+                      key={adv}
+                      className="flex gap-3 items-start bg-white dark:bg-brand-navy-light rounded-xl p-4 shadow-soft"
+                    >
+                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-accent text-white text-sm flex items-center justify-center">
+                        ★
+                      </span>
+                      <span className="text-sm font-medium">{adv}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {content.outro && (
+              <p className="text-base md:text-lg text-brand-muted dark:text-gray-300 max-w-3xl mx-auto text-center mt-14">
+                {content.outro}
+              </p>
+            )}
+          </div>
+        </section>
+      )}
 
       {(service.steps?.length > 0) && (
         <section className="section-padding">
