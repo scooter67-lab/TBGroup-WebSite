@@ -32,6 +32,7 @@ export default function Footer() {
           <ul className="space-y-2 text-gray-400">
             {contacts.phone && <li><a href={`tel:${contacts.phone}`}>{contacts.phone}</a></li>}
             {contacts.email && <li><a href={`mailto:${contacts.email}`}>{contacts.email}</a></li>}
+            {contacts.address && <li>{contacts.address}</li>}
             {contacts.telegram && (
               <li><a href={contacts.telegram} target="_blank" rel="noreferrer">Telegram</a></li>
             )}
