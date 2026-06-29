@@ -94,26 +94,51 @@ export default function ServicePage() {
         </motion.div>
       </section>
 
-      <section className="section-padding bg-brand-gray dark:bg-brand-navy/50">
-        <div className="container-narrow">
-          <h2 className="heading-2 mb-8 text-center">Преимущества</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {(service.benefits || []).map((b, i) => (
-              <motion.div
-                key={b.title}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className="bg-white dark:bg-brand-navy-light rounded-2xl p-6 shadow-soft"
-              >
-                <h3 className="font-bold mb-2">{b.title}</h3>
-                <p className="text-sm text-brand-muted">{b.description}</p>
-              </motion.div>
-            ))}
+      {content?.advantages?.length > 0 ? (
+        <section className="section-padding bg-brand-gray dark:bg-brand-navy/50">
+          <div className="container-narrow">
+            <h2 className="heading-2 mb-8 text-center">{content.advantagesTitle}</h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
+              {content.advantages.map((adv, i) => (
+                <motion.div
+                  key={adv}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: (i % 3) * 0.05 }}
+                  className="flex gap-3 items-start bg-white dark:bg-brand-navy-light rounded-xl p-4 shadow-soft"
+                >
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-accent text-white text-sm flex items-center justify-center">
+                    ★
+                  </span>
+                  <span className="text-sm font-medium">{adv}</span>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : (
+        <section className="section-padding bg-brand-gray dark:bg-brand-navy/50">
+          <div className="container-narrow">
+            <h2 className="heading-2 mb-8 text-center">Преимущества</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {(service.benefits || []).map((b, i) => (
+                <motion.div
+                  key={b.title}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                  className="bg-white dark:bg-brand-navy-light rounded-2xl p-6 shadow-soft"
+                >
+                  <h3 className="font-bold mb-2">{b.title}</h3>
+                  <p className="text-sm text-brand-muted">{b.description}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {content && (
         <section className="section-padding">
@@ -148,25 +173,6 @@ export default function ServicePage() {
                 </motion.div>
               ))}
             </div>
-
-            {content.advantages?.length > 0 && (
-              <div className="mt-16">
-                <h2 className="heading-2 mb-8 text-center">{content.advantagesTitle}</h2>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
-                  {content.advantages.map((adv) => (
-                    <div
-                      key={adv}
-                      className="flex gap-3 items-start bg-white dark:bg-brand-navy-light rounded-xl p-4 shadow-soft"
-                    >
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-accent text-white text-sm flex items-center justify-center">
-                        ★
-                      </span>
-                      <span className="text-sm font-medium">{adv}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {content.outro && (
               <p className="text-base md:text-lg text-brand-muted dark:text-gray-300 max-w-3xl mx-auto text-center mt-14">
