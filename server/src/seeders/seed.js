@@ -8,16 +8,16 @@ import { defaultPages } from '../data/defaultPages.js';
 
 export const seedAdmin = async () => {
   const email = process.env.ADMIN_EMAIL || 'admin@tbgroup.ru';
+  const password = process.env.ADMIN_PASSWORD;
   const exists = await User.findOne({ email });
-  if (!exists) {
-    await User.create({
-      name: 'Administrator',
-      email,
-      password: process.env.ADMIN_PASSWORD || 'Admin123!',
-      role: 'admin',
-    });
-    console.log(`Admin created: ${email}`);
+  if (exists) return;
+  // Не создаём администратора с дефолтным паролем — требуем ADMIN_PASSWORD.
+  if (!password) {
+    console.warn('ADMIN_PASSWORD не задан — создание администратора пропущено.');
+    return;
   }
+  await User.create({ name: 'Administrator', email, password, role: 'admin' });
+  console.log(`Admin created: ${email}`);
 };
 
 const servicesData = [
