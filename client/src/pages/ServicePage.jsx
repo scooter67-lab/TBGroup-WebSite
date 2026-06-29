@@ -91,6 +91,9 @@ export default function ServicePage() {
             {service.title}
           </motion.h1>
           <p className="text-xl text-gray-300 max-w-2xl">{service.shortDescription}</p>
+          {content?.intro && (
+            <p className="mt-6 text-base md:text-lg text-gray-400 max-w-3xl">{content.intro}</p>
+          )}
         </motion.div>
       </section>
 
@@ -143,12 +146,6 @@ export default function ServicePage() {
       {content && (
         <section className="section-padding">
           <div className="container-narrow">
-            {content.intro && (
-              <p className="text-lg md:text-xl text-brand-muted dark:text-gray-300 max-w-3xl mx-auto text-center mb-12">
-                {content.intro}
-              </p>
-            )}
-
             <h2 className="heading-2 mb-10 text-center">Возможности платформы</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {content.capabilities.map((cap, i) => (
