@@ -7,6 +7,7 @@ import Breadcrumbs from '../components/layout/Breadcrumbs';
 import ContactForm from '../components/ui/ContactForm';
 import { CardSkeleton } from '../components/ui/Skeleton';
 import { serviceContent } from '../data/serviceContent';
+import { useSettings } from '../context/SettingsContext';
 
 const fallback = {
   moysklad: {
@@ -46,6 +47,8 @@ export default function ServicePage() {
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
   const content = serviceContent[slug];
+  const { settings } = useSettings();
+  const contacts = settings.contacts || {};
 
   useEffect(() => {
     api
@@ -221,13 +224,54 @@ export default function ServicePage() {
             <p className="text-brand-muted mb-6">Расскажите о задаче — подготовим предложение</p>
             <ContactForm service={service.title} />
           </div>
-          {service.gallery?.length > 0 && (
-            <div className="grid grid-cols-2 gap-4">
-              {service.gallery.map((img, i) => (
-                <img key={i} src={img} alt="" className="rounded-xl object-cover h-40 w-full" loading="lazy" />
-              ))}
+          <div className="space-y-8">
+            <div className="glass rounded-2xl p-6 space-y-5">
+              <h3 className="font-bold text-lg">Контакты</h3>
+              {contacts.phone && (
+                <div>
+                  <p className="text-sm text-brand-muted">Телефон</p>
+                  <a href={`tel:${contacts.phone}`} className="text-lg font-semibold hover:text-brand-accent">
+                    {contacts.phone}
+                  </a>
+                </div>
+              )}
+              {contacts.email && (
+                <div>
+                  <p className="text-sm text-brand-muted">Email</p>
+                  <a href={`mailto:${contacts.email}`} className="text-lg font-semibold hover:text-brand-accent break-all">
+                    {contacts.email}
+                  </a>
+                </div>
+              )}
+              {contacts.address && (
+                <div>
+                  <p className="text-sm text-brand-muted">Адрес</p>
+                  <p className="text-base">{contacts.address}</p>
+                </div>
+              )}
+              {(contacts.telegram || contacts.whatsapp) && (
+                <div className="flex gap-3 pt-1">
+                  {contacts.telegram && (
+                    <a href={contacts.telegram} target="_blank" rel="noreferrer" className="btn-outline py-2">
+                      Telegram
+                    </a>
+                  )}
+                  {contacts.whatsapp && (
+                    <a href={contacts.whatsapp} target="_blank" rel="noreferrer" className="btn-primary py-2">
+                      WhatsApp
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
-          )}
+            {service.gallery?.length > 0 && (
+              <div className="grid grid-cols-2 gap-4">
+                {service.gallery.map((img, i) => (
+                  <img key={i} src={img} alt="" className="rounded-xl object-cover h-40 w-full" loading="lazy" />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </section>
     </>
