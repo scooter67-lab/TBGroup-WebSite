@@ -14,7 +14,7 @@ export default function ImageGallery({ images = [] }) {
             key={i}
             type="button"
             onClick={() => setActive(img)}
-            className="rounded-xl overflow-hidden aspect-video focus:ring-2 focus:ring-brand-accent"
+            className="rounded-xl overflow-hidden aspect-video focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-magenta"
           >
             <img src={img} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform" loading="lazy" />
           </button>

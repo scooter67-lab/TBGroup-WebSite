@@ -6,6 +6,7 @@ import SEO from '../components/ui/SEO';
 import Breadcrumbs from '../components/layout/Breadcrumbs';
 import ContactForm from '../components/ui/ContactForm';
 import { CardSkeleton } from '../components/ui/Skeleton';
+import BrandIcon, { emojiToIcon } from '../components/ui/BrandIcon';
 import { serviceContent } from '../data/serviceContent';
 import { useSettings } from '../context/SettingsContext';
 
@@ -60,7 +61,7 @@ export default function ServicePage() {
 
   if (loading) {
     return (
-      <div className="section-padding container-narrow">
+      <div className="section-pad container-tb">
         <CardSkeleton />
       </div>
     );
@@ -68,9 +69,9 @@ export default function ServicePage() {
 
   if (!service) {
     return (
-      <div className="section-padding container-narrow text-center">
+      <div className="section-pad container-tb text-center">
         <h1 className="heading-2">Услуга не найдена</h1>
-        <Link to="/" className="btn-primary mt-4 inline-flex">
+        <Link to="/" className="btn-primary mt-6 inline-flex">
           На главную
         </Link>
       </div>
@@ -80,63 +81,60 @@ export default function ServicePage() {
   return (
     <>
       <SEO title={service.title} description={service.shortDescription} path={`/services/${slug}`} />
-      <section className="bg-brand-navy text-white section-padding">
-        <motion.div className="container-narrow">
+
+      {/* Шапка: Ink-панель с цифровой сеткой */}
+      <section className="relative overflow-hidden bg-ink text-tx-inv">
+        <div
+          className="absolute inset-0 bg-grid-ink pointer-events-none"
+          style={{ maskImage: 'radial-gradient(110% 100% at 25% 0%, #000 35%, transparent 75%)', WebkitMaskImage: 'radial-gradient(110% 100% at 25% 0%, #000 35%, transparent 75%)' }}
+          aria-hidden="true"
+        />
+        <div className="container-tb relative py-14 md:py-20">
           <Breadcrumbs items={[{ label: 'Услуги', href: '/#services' }, { label: service.title }]} />
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
             className="heading-1 mb-4"
           >
             {service.title}
           </motion.h1>
-          <p className="text-xl text-gray-300 max-w-2xl">{service.shortDescription}</p>
+          <p className="text-lg md:text-xl text-tx-inv2 max-w-2xl">{service.shortDescription}</p>
           {content?.intro && (
-            <p className="mt-6 text-base md:text-lg text-gray-400 max-w-3xl">{content.intro}</p>
+            <p className="mt-6 text-[15px] md:text-base text-tx-inv3 max-w-3xl text-justify [hyphens:auto]">
+              {content.intro}
+            </p>
           )}
-        </motion.div>
+        </div>
       </section>
 
       {content?.advantages?.length > 0 ? (
-        <section className="pt-8 md:pt-10 pb-16 md:pb-24 px-4 sm:px-6 lg:px-8 bg-brand-gray dark:bg-brand-navy/50">
-          <div className="container-narrow">
-            <h2 className="heading-2 mb-8 text-center">{content.advantagesTitle}</h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
-              {content.advantages.map((adv, i) => (
-                <motion.div
-                  key={adv}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: (i % 3) * 0.05 }}
-                  className="flex gap-3 items-start bg-white dark:bg-brand-navy-light rounded-xl p-4 shadow-soft"
-                >
-                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-accent text-white text-sm flex items-center justify-center">
-                    ★
-                  </span>
+        <section className="section-pad bg-paper-2 dark:bg-ink-2">
+          <div className="container-tb">
+            <p className="eyebrow mb-4">Преимущества</p>
+            <h2 className="heading-2 mb-10 max-w-3xl">{content.advantagesTitle}</h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {content.advantages.map((adv) => (
+                <div key={adv} className="flex gap-3 items-start card-tb p-4">
+                  <BrandIcon name="check" size={22} strokeWidth={1.8} className="flex-shrink-0 mt-0.5" />
                   <span className="text-sm font-medium">{adv}</span>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
         </section>
       ) : (
-        <section className="section-padding bg-brand-gray dark:bg-brand-navy/50">
-          <div className="container-narrow">
-            <h2 className="heading-2 mb-8 text-center">Преимущества</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <section className="section-pad bg-paper-2 dark:bg-ink-2">
+          <div className="container-tb">
+            <p className="eyebrow mb-4">Преимущества</p>
+            <h2 className="heading-2 mb-10">Что вы получите</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
               {(service.benefits || []).map((b, i) => (
-                <motion.div
-                  key={b.title}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 }}
-                  className="bg-white dark:bg-brand-navy-light rounded-2xl p-6 shadow-soft"
-                >
-                  <h3 className="font-bold mb-2">{b.title}</h3>
-                  <p className="text-sm text-brand-muted">{b.description}</p>
-                </motion.div>
+                <div key={b.title} className="card-tb p-6">
+                  <span className="font-tech text-[11px] text-tx3 dark:text-tx-inv3">{String(i + 1).padStart(2, '0')}</span>
+                  <h3 className="font-bold mt-3 mb-1.5">{b.title}</h3>
+                  <p className="text-sm text-tx2 dark:text-tx-inv2">{b.description}</p>
+                </div>
               ))}
             </div>
           </div>
@@ -144,35 +142,29 @@ export default function ServicePage() {
       )}
 
       {content && (
-        <section className="section-padding">
-          <div className="container-narrow">
-            <h2 className="heading-2 mb-10 text-center">Возможности платформы</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {content.capabilities.map((cap, i) => (
-                <motion.div
-                  key={cap.title}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: (i % 3) * 0.05 }}
-                  className="glass rounded-2xl p-6 flex flex-col"
-                >
-                  <span className="text-3xl mb-3 block">{cap.icon}</span>
+        <section className="section-pad">
+          <div className="container-tb">
+            <p className="eyebrow mb-4">Платформа</p>
+            <h2 className="heading-2 mb-10">Возможности платформы</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {content.capabilities.map((cap) => (
+                <div key={cap.title} className="card-tb p-6 flex flex-col">
+                  <BrandIcon name={emojiToIcon[cap.icon] || 'gear'} size={34} strokeWidth={1.7} className="mb-4" />
                   <h3 className="font-bold mb-3">{cap.title}</h3>
                   <ul className="space-y-2">
                     {cap.items.map((item) => (
-                      <li key={item} className="flex gap-2 text-sm text-brand-muted dark:text-gray-300">
-                        <span className="text-brand-accent flex-shrink-0">✓</span>
+                      <li key={item} className="flex gap-2.5 text-sm text-tx2 dark:text-tx-inv2">
+                        <span className="w-1.5 h-1.5 rounded-[2px] bg-g1 flex-shrink-0 mt-[7px]" aria-hidden="true" />
                         <span>{item}</span>
                       </li>
                     ))}
                   </ul>
-                </motion.div>
+                </div>
               ))}
             </div>
 
             {content.outro && (
-              <p className="text-base md:text-lg text-brand-muted dark:text-gray-300 max-w-3xl mx-auto text-center mt-14">
+              <p className="text-[15px] md:text-base text-tx2 dark:text-tx-inv2 max-w-3xl mt-12">
                 {content.outro}
               </p>
             )}
@@ -180,87 +172,96 @@ export default function ServicePage() {
         </section>
       )}
 
-      {(service.steps?.length > 0) && (
-        <section className="section-padding">
-          <div className="container-narrow">
-            <h2 className="heading-2 mb-8 text-center">Этапы внедрения</h2>
-            <div className="space-y-4 max-w-2xl mx-auto">
-              {service.steps.map((step, i) => (
-                <div key={step.title} className="flex gap-4 glass rounded-xl p-5">
-                  <span className="flex-shrink-0 w-10 h-10 rounded-full bg-brand-accent text-white flex items-center justify-center font-bold">
-                    {i + 1}
-                  </span>
-                  <div>
-                    <h3 className="font-bold">{step.title}</h3>
-                    <p className="text-brand-muted text-sm">{step.description}</p>
+      {service.steps?.length > 0 && (
+        <section className="section-pad bg-paper-2 dark:bg-ink-2">
+          <div className="container-tb">
+            <p className="eyebrow mb-4">Процесс</p>
+            <h2 className="heading-2 mb-10">Этапы внедрения</h2>
+            <div className="relative max-w-2xl">
+              <span className="absolute left-[19px] top-2 bottom-2 w-px bg-g2 opacity-40" aria-hidden="true" />
+              <div className="space-y-6">
+                {service.steps.map((step, i) => (
+                  <div key={step.title} className="relative flex gap-5 pl-0">
+                    <span className="relative z-10 flex-shrink-0 w-10 h-10 rounded-xl bg-g1 text-white flex items-center justify-center font-tech text-[13px]">
+                      {i + 1}
+                    </span>
+                    <div className="pt-1.5">
+                      <h3 className="font-bold">{step.title}</h3>
+                      <p className="text-sm text-tx2 dark:text-tx-inv2 mt-1">{step.description}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </section>
       )}
 
-      {(service.faq?.length > 0) && (
-        <section className="section-padding bg-brand-gray dark:bg-brand-navy/50">
-          <motion.div className="container-narrow max-w-3xl">
-            <h2 className="heading-2 mb-8 text-center">FAQ</h2>
-            <div className="space-y-4">
+      {service.faq?.length > 0 && (
+        <section className="section-pad">
+          <div className="container-tb max-w-3xl">
+            <p className="eyebrow mb-4">FAQ</p>
+            <h2 className="heading-2 mb-10">Частые вопросы</h2>
+            <div className="space-y-3">
               {service.faq.map((item) => (
-                <details key={item.question} className="glass rounded-xl p-5 group">
-                  <summary className="font-semibold cursor-pointer list-none flex justify-between">
+                <details key={item.question} className="card-tb !overflow-visible p-5 group">
+                  <summary className="font-semibold cursor-pointer list-none flex justify-between items-center gap-4 [&::-webkit-details-marker]:hidden">
                     {item.question}
-                    <span className="group-open:rotate-180 transition-transform">▼</span>
+                    <span className="w-6 h-6 flex-none rounded-lg border-[1.5px] border-paper-line2 dark:border-white/15 relative transition-transform duration-200 group-open:rotate-45" aria-hidden="true">
+                      <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-[1.5px] bg-tx2 dark:bg-tx-inv2" />
+                      <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-2.5 w-[1.5px] bg-tx2 dark:bg-tx-inv2" />
+                    </span>
                   </summary>
-                  <p className="mt-3 text-brand-muted">{item.answer}</p>
+                  <p className="mt-3 text-tx2 dark:text-tx-inv2 text-[15px]">{item.answer}</p>
                 </details>
               ))}
             </div>
-          </motion.div>
+          </div>
         </section>
       )}
 
-      <section className="section-padding">
-        <div className="container-narrow grid lg:grid-cols-2 gap-10">
+      <section className="section-pad bg-paper-2 dark:bg-ink-2">
+        <div className="container-tb grid lg:grid-cols-2 gap-10">
           <div>
-            <h2 className="heading-2 mb-4">Оставить заявку</h2>
-            <p className="text-brand-muted mb-6">Расскажите о задаче — подготовим предложение</p>
+            <p className="eyebrow mb-4">Заявка</p>
+            <h2 className="heading-2 mb-3">Оставить заявку</h2>
+            <p className="text-tx2 dark:text-tx-inv2 mb-7">Расскажите о задаче — подготовим предложение</p>
             <ContactForm service={service.title} />
           </div>
-          <div className="space-y-8">
-            <div className="glass rounded-2xl p-6 space-y-5">
+          <div className="space-y-6">
+            <div className="card-tb p-6 space-y-5">
               <h3 className="font-bold text-lg">Контакты</h3>
               {contacts.phone && (
                 <div>
-                  <p className="text-sm text-brand-muted">Телефон</p>
-                  <a href={`tel:${contacts.phone}`} className="text-lg font-semibold hover:text-brand-accent">
+                  <p className="label-tech mb-1">Телефон</p>
+                  <a href={`tel:${contacts.phone}`} className="text-lg font-semibold hover:text-brand-magenta transition-colors">
                     {contacts.phone}
                   </a>
                 </div>
               )}
               {contacts.email && (
                 <div>
-                  <p className="text-sm text-brand-muted">Email</p>
-                  <a href={`mailto:${contacts.email}`} className="text-lg font-semibold hover:text-brand-accent break-all">
+                  <p className="label-tech mb-1">Email</p>
+                  <a href={`mailto:${contacts.email}`} className="text-lg font-semibold hover:text-brand-magenta transition-colors break-all">
                     {contacts.email}
                   </a>
                 </div>
               )}
               {contacts.address && (
                 <div>
-                  <p className="text-sm text-brand-muted">Адрес</p>
+                  <p className="label-tech mb-1">Адрес</p>
                   <p className="text-base">{contacts.address}</p>
                 </div>
               )}
               {(contacts.telegram || contacts.whatsapp) && (
                 <div className="flex gap-3 pt-1">
                   {contacts.telegram && (
-                    <a href={contacts.telegram} target="_blank" rel="noreferrer" className="btn-outline py-2">
+                    <a href={contacts.telegram} target="_blank" rel="noreferrer" className="btn-secondary py-2.5 px-5 text-sm">
                       Telegram
                     </a>
                   )}
                   {contacts.whatsapp && (
-                    <a href={contacts.whatsapp} target="_blank" rel="noreferrer" className="btn-primary py-2">
+                    <a href={contacts.whatsapp} target="_blank" rel="noreferrer" className="btn-primary py-2.5 px-5 text-sm">
                       WhatsApp
                     </a>
                   )}

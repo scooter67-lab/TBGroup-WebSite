@@ -26,7 +26,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' })
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className={`relative w-full ${sizes[size]} glass rounded-2xl p-6 shadow-glass`}
+            className={`relative w-full ${sizes[size]} card-tb !rounded-2xl p-6 shadow-modal`}
           >
             {title && (
               <div className="flex justify-between items-center mb-4">
@@ -34,7 +34,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' })
                 <button
                   type="button"
                   onClick={onClose}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-brand-navy rounded-lg"
+                  className="p-2 hover:bg-paper-2 dark:hover:bg-ink-3 rounded-lg"
                   aria-label="Закрыть"
                 >
                   ✕

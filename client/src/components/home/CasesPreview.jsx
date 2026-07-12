@@ -20,42 +20,51 @@ export default function CasesPreview() {
       .finally(() => setLoading(false));
   }, []);
 
+  if (!loading && cases.length === 0) return null; // не показываем пустую секцию
+
   return (
-    <Section id="cases" subtitle={block?.subtitle} title={block?.title} dark>
+    <Section id="cases" subtitle={block?.subtitle} title={block?.title} tone="ink">
       {loading ? (
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-5">
           {[1, 2, 3].map((n) => (
             <CardSkeleton key={n} />
           ))}
         </div>
       ) : (
-        <motion.div className="grid md:grid-cols-3 gap-6">
+        <div className={`grid gap-5 ${cases.length === 1 ? 'md:grid-cols-2' : 'md:grid-cols-3'}`}>
           {cases.map((c, i) => (
             <motion.div
               key={c._id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 1, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ delay: i * 0.06, duration: 0.5, ease: [0.22, 0.61, 0.36, 1] }}
             >
               <Link
                 to={`/cases/${c.slug}`}
-                className="block glass rounded-2xl p-6 h-full hover:-translate-y-1 transition-transform"
+                className="card-tb card-tb-hover !bg-ink-4 !border-white/10 hover:!border-white/20 block p-7 h-full"
               >
-                <span className="text-xs text-brand-accent font-medium">{c.industry}</span>
-                <h3 className="text-lg font-bold mt-2 mb-2">{c.title}</h3>
-                <p className="text-sm text-gray-400 line-clamp-2">{c.result}</p>
+                <span className="font-tech text-[9px] tracking-[.15em] uppercase text-tx-inv3">
+                  {c.client}{c.industry ? ` · ${c.industry}` : ''}
+                </span>
+                <h3 className="text-lg font-bold mt-3 mb-2 text-tx-inv">{c.title}</h3>
+                <p className="text-sm text-tx-inv2 line-clamp-2">{c.result}</p>
                 {c.metrics?.[0] && (
-                  <p className="mt-4 text-brand-accent font-bold text-2xl">{c.metrics[0].value}</p>
+                  <p className="mt-5 font-tech text-2xl bg-g1 bg-clip-text text-transparent">
+                    {c.metrics[0].value}
+                  </p>
+                )}
+                {c.metrics?.[0] && (
+                  <p className="text-xs text-tx-inv3 mt-1">{c.metrics[0].label}</p>
                 )}
               </Link>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       )}
-      <div className="text-center mt-10">
-        <Link to="/cases" className="btn-outline border-white text-white hover:bg-white hover:text-brand-navy">
-          {block?.ctaLabel || 'Все кейсы'}
+      <div className="mt-10">
+        <Link to="/cases" className="btn-secondary !border-white/15 !text-tx-inv hover:!border-brand-magenta">
+          {block?.ctaLabel || 'Все кейсы'} →
         </Link>
       </div>
     </Section>

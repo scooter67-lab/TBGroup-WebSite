@@ -1,65 +1,75 @@
-import { motion } from 'framer-motion';
 import { useSettings } from '../context/SettingsContext';
 import SEO from '../components/ui/SEO';
 import Breadcrumbs from '../components/layout/Breadcrumbs';
+import { DotsField } from '../components/ui/Decor';
 
 export default function About() {
   const { pages } = useSettings();
   const block = pages.about || {};
+  const members = block.team?.members || [];
+  const partners = block.partners?.items || [];
 
   return (
     <>
       <SEO title="О компании" description="История, команда и партнёры TB Group" path="/about" />
-      <section className="section-padding">
-        <div className="container-narrow">
+      <section className="section-pad">
+        <div className="container-tb">
           <Breadcrumbs items={[{ label: 'О компании' }]} />
-          <h1 className="heading-1 mb-8">{block.pageTitle || 'О компании'}</h1>
+          <p className="eyebrow mb-4">Архитекторы вашего роста</p>
+          <h1 className="heading-1 mb-12">{block.pageTitle || 'О компании'}</h1>
 
-          <section className="mb-16 max-w-3xl">
-            <h2 className="heading-2 mb-4">{block.history?.title}</h2>
-            <p className="text-brand-muted leading-relaxed">{block.history?.text}</p>
+          <section className="mb-16 grid lg:grid-cols-[1fr_auto] gap-10">
+            <div className="max-w-3xl">
+              <h2 className="heading-2 mb-5">{block.history?.title}</h2>
+              <p className="text-tx2 dark:text-tx-inv2 leading-relaxed text-[16px]">{block.history?.text}</p>
+            </div>
+            <div className="hidden lg:block w-px self-stretch bg-g2 opacity-40" aria-hidden="true" />
           </section>
 
-          <section className="mb-16">
-            <h2 className="heading-2 mb-8 text-center">{block.team?.title}</h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {(block.team?.members || []).map((m, i) => (
-                <motion.div
-                  key={`${m.name}-${i}`}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.08 }}
-                  className="glass rounded-2xl p-6 text-center"
-                >
-                  <div className="w-20 h-20 rounded-full bg-brand-accent/20 mx-auto mb-4 flex items-center justify-center text-2xl font-bold text-brand-accent">
-                    {m.name?.[0]}
+          {members.length > 0 && (
+            <section className="mb-16">
+              <p className="eyebrow mb-4">Команда</p>
+              <h2 className="heading-2 mb-10">{block.team?.title}</h2>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {members.map((m, i) => (
+                  <div key={`${m.name}-${i}`} className="card-tb p-6">
+                    <div className="w-14 h-14 rounded-xl bg-g1 flex items-center justify-center font-tech text-lg text-white mb-4">
+                      {m.name?.[0]}
+                    </div>
+                    <h3 className="font-bold">{m.name}</h3>
+                    <p className="text-sm text-tx2 dark:text-tx-inv2 mt-1">{m.role}</p>
                   </div>
-                  <h3 className="font-bold">{m.name}</h3>
-                  <p className="text-sm text-brand-muted mt-1">{m.role}</p>
-                </motion.div>
-              ))}
-            </div>
-          </section>
+                ))}
+              </div>
+            </section>
+          )}
 
-          <section className="mb-16">
-            <h2 className="heading-2 mb-6">{block.partners?.title}</h2>
-            <div className="flex flex-wrap gap-4">
-              {(block.partners?.items || []).map((p) => (
-                <span key={p} className="px-6 py-3 glass rounded-xl font-medium">
-                  {p}
-                </span>
-              ))}
-            </div>
-          </section>
+          {partners.length > 0 && (
+            <section className="mb-16">
+              <p className="eyebrow mb-4">Партнёрство</p>
+              <h2 className="heading-2 mb-8">{block.partners?.title}</h2>
+              <div className="flex flex-wrap gap-3">
+                {partners.map((p) => (
+                  <span key={p} className="font-tech text-[10px] tracking-[.15em] uppercase border border-paper-line2 dark:border-white/15 rounded-xl px-5 py-3.5 text-tx2 dark:text-tx-inv2">
+                    {p}
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
 
           <section>
-            <h2 className="heading-2 mb-6">{block.office?.title}</h2>
+            <p className="eyebrow mb-4">Офис · Алматы</p>
+            <h2 className="heading-2 mb-8">{block.office?.title}</h2>
             {block.office?.image ? (
-              <img src={block.office.image} alt={block.office.title} className="w-full aspect-video object-cover rounded-2xl" />
+              <img src={block.office.image} alt={block.office.title} className="w-full aspect-video object-cover rounded-3xl" />
             ) : (
-              <div className="aspect-video rounded-2xl bg-gradient-to-br from-brand-navy to-brand-accent/30 flex items-center justify-center text-white/60">
-                {block.office?.placeholder || 'Фото офиса'}
+              <div className="relative aspect-[21/9] rounded-3xl bg-ink overflow-hidden flex items-center justify-center">
+                <DotsField className="absolute inset-0" opacity={0.5} />
+                <div className="relative text-center px-6">
+                  <p className="font-tech text-[10px] tracking-[.22em] uppercase text-tx-inv2 mb-3">TB Group · Алматы</p>
+                  <p className="text-tx-inv2 text-sm">г. Алматы, ул. Рыскулова, 140/4, оф. 201</p>
+                </div>
               </div>
             )}
           </section>

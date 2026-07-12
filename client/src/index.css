@@ -1,3 +1,5 @@
+@import './fonts.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,38 +8,177 @@
   html {
     scroll-behavior: smooth;
   }
+  html, body {
+    overflow-x: clip; /* страховка от горизонтального скролла (аудит: mobile overflow) */
+  }
   body {
-    @apply font-sans text-brand-navy bg-white antialiased;
+    @apply font-sans antialiased text-tx bg-paper;
   }
   .dark body {
-    @apply bg-brand-navy text-white;
+    @apply bg-ink text-tx-inv;
+  }
+  ::selection {
+    background: #d946ef;
+    color: #fff;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
 @layer components {
-  .glass {
-    @apply bg-white/70 dark:bg-brand-navy-light/70 backdrop-blur-xl border border-white/20 shadow-glass;
+  .container-tb {
+    @apply max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8;
   }
-  .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold
-      bg-brand-accent text-white hover:bg-brand-accent-hover transition-all duration-300
-      hover:shadow-lg hover:-translate-y-0.5;
+  .section-pad {
+    @apply py-16 md:py-24 xl:py-28;
   }
-  .btn-outline {
-    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold
-      border-2 border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-white
-      transition-all duration-300;
-  }
-  .section-padding {
-    @apply py-16 md:py-24 px-4 sm:px-6 lg:px-8;
-  }
-  .container-narrow {
-    @apply max-w-7xl mx-auto;
-  }
+
+  /* типографика */
   .heading-1 {
-    @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
+    @apply font-display font-semibold text-[30px] leading-[1.12] md:text-[40px] lg:text-[46px] md:leading-[1.1];
   }
   .heading-2 {
-    @apply text-3xl md:text-4xl font-bold tracking-tight;
+    @apply font-display font-semibold text-[23px] leading-[1.2] md:text-[30px] lg:text-[32px] md:leading-[1.18];
+  }
+  .label-tech {
+    @apply font-tech text-[10px] tracking-[0.16em] uppercase text-tx3 dark:text-tx-inv3;
+  }
+  .eyebrow {
+    @apply label-tech flex items-center gap-3;
+  }
+  .eyebrow::before {
+    content: '';
+    @apply w-7 h-0.5 rounded-full bg-g1 flex-none;
+  }
+
+  /* кнопки */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-[15px] text-white
+      bg-g1 transition-all duration-200 ease-brand hover:-translate-y-px hover:shadow-btn active:translate-y-0 active:shadow-none
+      focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-magenta
+      disabled:opacity-60 disabled:pointer-events-none;
+  }
+  .btn-primary:hover {
+    background-image: linear-gradient(135deg, #6d28d9 0%, #e879f9 48%, #fb923c 100%);
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-[15px]
+      border-[1.5px] border-paper-line2 text-tx dark:border-white/15 dark:text-tx-inv
+      transition-all duration-200 ease-brand hover:border-brand-magenta hover:-translate-y-px
+      focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-magenta;
+  }
+  .btn-ghost {
+    @apply relative inline-flex items-center gap-1 px-2 py-3 font-semibold text-[15px] text-tx2 dark:text-tx-inv2
+      transition-colors duration-200 hover:text-tx dark:hover:text-tx-inv
+      focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-magenta;
+  }
+  .btn-ghost::after {
+    content: '';
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    bottom: 6px;
+    height: 1.5px;
+    background: linear-gradient(135deg, #5b21b6, #d946ef 48%, #f97316);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 250ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .btn-ghost:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* карточка с фирменным «срезом TB» */
+  .card-tb {
+    @apply relative overflow-hidden rounded-2xl border border-paper-line bg-white dark:border-white/10 dark:bg-ink-4
+      transition-all duration-200 ease-brand;
+    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
+  }
+  .card-tb::before {
+    content: '';
+    position: absolute;
+    top: 9.5px;
+    right: -5px;
+    width: 32px;
+    height: 2px;
+    background: linear-gradient(135deg, #5b21b6, #d946ef 48%, #f97316);
+    transform: rotate(45deg);
+    z-index: 1;
+  }
+  .card-tb::after {
+    content: '';
+    position: absolute;
+    right: -24%;
+    bottom: -14%;
+    width: 70%;
+    height: 2px;
+    background: linear-gradient(135deg, #5b21b6, #d946ef 48%, #f97316);
+    transform: rotate(-14deg);
+    transform-origin: left bottom;
+    opacity: 0;
+    transition: opacity 250ms cubic-bezier(0.22, 0.61, 0.36, 1), transform 600ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .card-tb-hover:hover {
+    @apply -translate-y-[3px] shadow-card-h border-paper-line2 dark:border-white/20;
+  }
+  .card-tb-hover:hover::after {
+    opacity: 1;
+    transform: rotate(-14deg) translateX(-12%);
+  }
+
+  /* статистика с градиентной верхней чертой */
+  .stat-tb {
+    @apply relative overflow-hidden rounded-xl border border-paper-line bg-white px-5 py-4 dark:border-white/10 dark:bg-ink-4;
+  }
+  .stat-tb::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #5b21b6, #d946ef 48%, #f97316);
+  }
+
+  /* поля форм */
+  .input-tb {
+    @apply w-full rounded-xl border-[1.5px] border-paper-line2 bg-white px-4 py-3 text-[15px] text-tx
+      placeholder:text-tx3 transition-all duration-150
+      dark:border-white/15 dark:bg-ink-3 dark:text-tx-inv dark:placeholder:text-tx-inv3
+      hover:border-tx3 dark:hover:border-white/30
+      focus:outline-none focus:border-brand-magenta focus:ring-[3px] focus:ring-brand-magenta/20;
+  }
+  .input-err {
+    @apply border-[#E5484D] focus:border-[#E5484D] focus:ring-[#E5484D]/15;
+  }
+
+  /* панель Ink (hero, CTA) */
+  .panel-ink {
+    @apply relative overflow-hidden rounded-3xl bg-ink text-tx-inv border border-paper-line dark:border-white/10;
+  }
+
+  /* инженерная сетка */
+  .bg-grid-ink {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    background-size: 52px 52px;
+  }
+  .bg-grid-paper {
+    background-image:
+      linear-gradient(rgba(23, 18, 50, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(23, 18, 50, 0.05) 1px, transparent 1px);
+    background-size: 52px 52px;
+  }
+
+  /* hairline-разделитель полного спектра */
+  .hairline-g2 {
+    @apply h-px w-full bg-g2 opacity-60;
   }
 }

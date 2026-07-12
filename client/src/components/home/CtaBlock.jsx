@@ -1,29 +1,11 @@
-import { Link } from 'react-router-dom';
 import ContactForm from '../ui/ContactForm';
-import { Section } from './Section';
 import { useSettings } from '../../context/SettingsContext';
+import { DotsField } from '../ui/Decor';
 
 const defaults = {
   title: 'Готовы оптимизировать бизнес-процессы?',
   subtitle: 'Оставьте заявку — проведём бесплатную консультацию и предложим решение под ваши задачи.',
-  link: { to: '/contacts', label: 'Контакты и карта' },
 };
-
-function CtaLink({ href, className, children }) {
-  const external = href.startsWith('http');
-  if (external) {
-    return (
-      <a href={href} target="_blank" rel="noreferrer" className={className}>
-        {children}
-      </a>
-    );
-  }
-  return (
-    <Link to={href} className={className}>
-      {children}
-    </Link>
-  );
-}
 
 export default function CtaBlock() {
   const { getBanner } = useSettings();
@@ -31,27 +13,28 @@ export default function CtaBlock() {
 
   const title = banner?.title || defaults.title;
   const subtitle = banner?.subtitle || defaults.subtitle;
-  const linkHref = banner?.link || defaults.link.to;
-  const linkLabel = banner?.link ? 'Подробнее' : defaults.link.label;
 
   return (
-    <Section id="cta" className="bg-white dark:bg-brand-navy">
-      <div className="grid lg:grid-cols-2 gap-12 items-center">
-        <div>
-          {banner?.image && (
-            <img src={banner.image} alt="" className="rounded-xl mb-6 max-h-48 object-cover w-full" />
-          )}
-          <h2 className="heading-2 mb-4">{title}</h2>
-          <p className="text-brand-muted dark:text-gray-400 mb-6">{subtitle}</p>
-          <CtaLink href={linkHref} className="btn-outline">
-            {linkLabel}
-          </CtaLink>
-        </div>
-        <div className="glass rounded-2xl p-8">
-          <h3 className="font-bold text-lg mb-4">Быстрая заявка</h3>
-          <ContactForm compact />
+    <section id="cta" className="section-pad bg-paper dark:bg-ink">
+      <div className="container-tb">
+        <div className="panel-ink">
+          <DotsField className="absolute inset-0 pointer-events-none" opacity={0.35} />
+          <div className="relative grid lg:grid-cols-2 gap-10 p-7 md:p-12 xl:p-16 items-center">
+            <div>
+              <p className="font-tech text-[10px] tracking-[.22em] uppercase text-tx-inv2 flex items-center gap-3 mb-5">
+                <span className="w-7 h-0.5 bg-g1 rounded-full flex-none" aria-hidden="true" />
+                Ваш бизнес. Наша система. Ваш успех.
+              </p>
+              <h2 className="heading-2 text-tx-inv mb-4">{title}</h2>
+              <p className="text-tx-inv2 max-w-lg">{subtitle}</p>
+            </div>
+            <div className="card-tb !bg-ink-3 !border-white/10 p-6 md:p-8">
+              <h3 className="font-bold text-lg mb-5 text-tx-inv">Быстрая заявка</h3>
+              <ContactForm compact onInk />
+            </div>
+          </div>
         </div>
       </div>
-    </Section>
+    </section>
   );
 }

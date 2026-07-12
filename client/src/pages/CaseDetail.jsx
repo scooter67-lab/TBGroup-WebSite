@@ -6,6 +6,9 @@ import SEO from '../components/ui/SEO';
 import Breadcrumbs from '../components/layout/Breadcrumbs';
 import VideoEmbed from '../components/ui/VideoEmbed';
 import ImageGallery from '../components/ui/ImageGallery';
+import { Skeleton } from '../components/ui/Skeleton';
+
+const sectionTitles = { task: 'Задача', solution: 'Решение', result: 'Результат' };
 
 export default function CaseDetail() {
   const { slug } = useParams();
@@ -21,14 +24,18 @@ export default function CaseDetail() {
   }, [slug]);
 
   if (loading) {
-    return <div className="section-padding container-narrow animate-pulse h-96 bg-gray-100 rounded-2xl" />;
+    return (
+      <div className="section-pad container-tb">
+        <Skeleton className="h-96 w-full" />
+      </div>
+    );
   }
 
   if (!caseItem) {
     return (
-      <div className="section-padding container-narrow text-center">
+      <div className="section-pad container-tb text-center">
         <h1 className="heading-2">Кейс не найден</h1>
-        <Link to="/cases" className="btn-primary mt-4 inline-flex">
+        <Link to="/cases" className="btn-primary mt-6 inline-flex">
           К списку кейсов
         </Link>
       </div>
@@ -38,36 +45,39 @@ export default function CaseDetail() {
   return (
     <>
       <SEO title={caseItem.title} description={caseItem.result} path={`/cases/${slug}`} />
-      <article className="section-padding">
-        <div className="container-narrow max-w-4xl">
+      <article className="section-pad">
+        <div className="container-tb max-w-4xl">
           <Breadcrumbs items={[{ label: 'Кейсы', href: '/cases' }, { label: caseItem.title }]} />
+          <p className="font-tech text-[10px] tracking-[.18em] uppercase text-tx3 dark:text-tx-inv3 mb-4">
+            {caseItem.client}{caseItem.industry ? ` · ${caseItem.industry}` : ''}
+          </p>
           <motion.h1
-            initial={{ opacity: 0, y: 15 }}
+            initial={{ opacity: 1, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="heading-1 mb-2"
+            transition={{ duration: 0.5, ease: [0.22, 0.61, 0.36, 1] }}
+            className="heading-1 mb-8"
           >
             {caseItem.title}
           </motion.h1>
-          <p className="text-brand-accent font-medium mb-8">{caseItem.client} · {caseItem.industry}</p>
 
           {caseItem.metrics?.length > 0 && (
-            <div className="grid grid-cols-3 gap-4 mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
               {caseItem.metrics.map((m) => (
-                <div key={m.label} className="glass rounded-xl p-4 text-center">
-                  <p className="text-2xl font-bold text-brand-accent">{m.value}</p>
-                  <p className="text-sm text-brand-muted">{m.label}</p>
+                <div key={m.label} className="stat-tb">
+                  <p className="font-tech text-2xl bg-g1 bg-clip-text text-transparent">{m.value}</p>
+                  <p className="text-[13px] text-tx2 dark:text-tx-inv2 mt-1">{m.label}</p>
                 </div>
               ))}
             </div>
           )}
 
           {['task', 'solution', 'result'].map((key) => (
-            <section key={key} className="mb-8">
-              <h2 className="text-xl font-bold mb-3 capitalize">
-                {key === 'task' ? 'Задача' : key === 'solution' ? 'Решение' : 'Результат'}
-              </h2>
-              <p className="text-brand-muted leading-relaxed">{caseItem[key]}</p>
-            </section>
+            caseItem[key] && (
+              <section key={key} className="mb-10">
+                <p className="eyebrow mb-3">{sectionTitles[key]}</p>
+                <p className="text-tx2 dark:text-tx-inv2 leading-relaxed whitespace-pre-line">{caseItem[key]}</p>
+              </section>
+            )
           ))}
 
           {caseItem.images?.length > 0 && <ImageGallery images={caseItem.images} />}
@@ -76,6 +86,11 @@ export default function CaseDetail() {
               <VideoEmbed url={caseItem.videoUrl} type={caseItem.videoType} />
             </div>
           )}
+
+          <div className="mt-14 pt-8 border-t border-paper-line dark:border-white/10 flex flex-wrap gap-4 items-center justify-between">
+            <p className="text-tx2 dark:text-tx-inv2">Похожая задача? Обсудим на бесплатной консультации.</p>
+            <Link to="/contacts" className="btn-primary">Обсудить проект</Link>
+          </div>
         </div>
       </article>
     </>

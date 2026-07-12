@@ -4,45 +4,46 @@ import { motion } from 'framer-motion';
 import api from '../../api/axios';
 import { useSettings } from '../../context/SettingsContext';
 import { Section } from './Section';
+import BrandIcon, { emojiToIcon } from '../ui/BrandIcon';
 
-const iconMap = {
-  package: '📦',
-  users: '👥',
-  phone: '📞',
-  cloud: '☁️',
-};
+const fallbackServices = [
+  { _id: 'f1', slug: 'moysklad', title: 'МойСклад', icon: 'package', shortDescription: 'Учёт склада и продаж, синхронизация с CRM и маркетплейсами, автоматизация рутины.' },
+  { _id: 'f2', slug: 'bitrix24', title: 'Битрикс24', icon: 'users', shortDescription: 'CRM, воронки продаж, автоматизация бизнес-процессов и корпоративный портал.' },
+  { _id: 'f3', slug: 'telephony', title: 'Телефония', icon: 'phone', shortDescription: 'IP-АТС, SIP-номера, запись звонков и интеграция телефонии с CRM.' },
+];
 
 export default function ServicesGrid() {
   const { pages } = useSettings();
   const block = pages.home?.services;
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState(fallbackServices);
 
   useEffect(() => {
     api
       .get('/services')
-      .then(({ data }) => setServices(data.slice(0, 3)))
-      .catch(() => setServices([]));
+      .then(({ data }) => {
+        if (data?.length) setServices(data.slice(0, 3));
+      })
+      .catch(() => {});
   }, []);
 
   return (
-    <Section id="services" subtitle={block?.subtitle} title={block?.title}>
-      <div className="grid md:grid-cols-3 gap-6">
+    <Section id="services" subtitle={block?.subtitle} title={block?.title} tone="alt">
+      <div className="grid md:grid-cols-3 gap-5">
         {services.map((s, i) => (
           <motion.div
             key={s._id}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ delay: i * 0.06, duration: 0.5, ease: [0.22, 0.61, 0.36, 1] }}
           >
-            <Link
-              to={`/services/${s.slug}`}
-              className="block glass rounded-2xl p-8 h-full hover:shadow-glass hover:-translate-y-1 transition-all duration-300 group"
-            >
-              <span className="text-4xl mb-4 block">{iconMap[s.icon] || '☁️'}</span>
-              <h3 className="text-xl font-bold mb-2 group-hover:text-brand-accent transition-colors">{s.title}</h3>
-              <p className="text-brand-muted dark:text-gray-400">{s.shortDescription}</p>
-              <span className="inline-block mt-4 text-brand-accent font-medium">Подробнее →</span>
+            <Link to={`/services/${s.slug}`} className="card-tb card-tb-hover flex flex-col gap-3 p-7 h-full group">
+              <BrandIcon name={emojiToIcon[s.icon] || 'cloud'} size={42} strokeWidth={1.6} />
+              <h3 className="text-lg font-bold mt-1">{s.title}</h3>
+              <p className="text-sm text-tx2 dark:text-tx-inv2">{s.shortDescription}</p>
+              <span className="mt-auto pt-2 font-semibold text-sm bg-g1 bg-clip-text text-transparent">
+                Подробнее →
+              </span>
             </Link>
           </motion.div>
         ))}

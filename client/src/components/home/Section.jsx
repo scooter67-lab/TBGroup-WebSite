@@ -1,24 +1,29 @@
 import { motion } from 'framer-motion';
 
-export function Section({ id, title, subtitle, children, className = '', dark = false }) {
+/**
+ * Секция дизайн-системы: эйбра Michroma с градиентным тиком, заголовок Unbounded слева.
+ * tone: 'default' | 'alt' (чередование фона) | 'ink' (тёмная панель-секция)
+ */
+export function Section({ id, title, subtitle, children, className = '', tone = 'default', dark = false }) {
+  const t = dark ? 'ink' : tone;
+  const bg =
+    t === 'ink'
+      ? 'bg-ink text-tx-inv'
+      : t === 'alt'
+        ? 'bg-paper-2 dark:bg-ink-2'
+        : 'bg-paper dark:bg-ink';
+
   return (
-    <section
-      id={id}
-      className={`section-padding ${dark ? 'bg-brand-navy text-white' : 'bg-brand-gray dark:bg-brand-navy/50'} ${className}`}
-    >
-      <div className="container-narrow">
+    <section id={id} className={`section-pad ${bg} ${className}`}>
+      <div className="container-tb">
         {(title || subtitle) && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 0 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center max-w-2xl mx-auto mb-12"
+            className="max-w-3xl mb-10 md:mb-14"
           >
-            {subtitle && (
-              <p className="text-brand-accent font-semibold text-sm uppercase tracking-wider mb-2">
-                {subtitle}
-              </p>
-            )}
+            {subtitle && <p className={`eyebrow mb-4 ${t === 'ink' ? '!text-tx-inv3' : ''}`}>{subtitle}</p>}
             {title && <h2 className="heading-2">{title}</h2>}
           </motion.div>
         )}

@@ -1,17 +1,19 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useSettings } from '../../context/SettingsContext';
+import { OrbitalScene } from '../ui/Decor';
 
 const defaults = {
-  badge: 'Облачные решения для бизнеса',
+  badge: 'TB Group · Казахстан',
   title: (
     <>
-      Внедряем <span className="text-brand-accent">МойСклад</span>,{' '}
-      <span className="text-brand-accent">Битрикс24</span> и телефонию
+      Системы, которые{' '}
+      <em className="not-italic bg-g1 bg-clip-text text-transparent">работают на ваш рост</em>
     </>
   ),
   subtitle:
-    'TB Group — интеграция облачных систем, автоматизация процессов и CRM. От аудита до сопровождения.',
+    'Внедряем МойСклад, Битрикс24 и IP-телефонию: связываем склад, продажи и коммуникации в один управляемый контур.',
   ctaPrimary: { to: '/contacts', label: 'Бесплатная консультация' },
   ctaSecondary: { to: '/cases', label: 'Смотреть кейсы' },
 };
@@ -32,6 +34,45 @@ function BannerLink({ href, className, children }) {
   );
 }
 
+/** Счётчик: целые значения, 1.2s, один раз при появлении (спека движения) */
+function Counter({ to }) {
+  const ref = useRef(null);
+  // старт с финального значения: цифры видны даже если observer не сработал
+  const [val, setVal] = useState(to);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setVal(to);
+      return undefined;
+    }
+    let raf;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0].isIntersecting) return;
+        io.disconnect();
+        let t0 = null;
+        const step = (ts) => {
+          if (!t0) t0 = ts;
+          const p = Math.min((ts - t0) / 1200, 1);
+          setVal(Math.round(to * (1 - Math.pow(1 - p, 3))));
+          if (p < 1) raf = requestAnimationFrame(step);
+        };
+        raf = requestAnimationFrame(step);
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [to]);
+
+  return <span ref={ref}>{val}</span>;
+}
+
 export default function Hero() {
   const { settings, pages, getBanner, loading } = useSettings();
   const banner = getBanner('hero');
@@ -40,9 +81,7 @@ export default function Hero() {
 
   const title = banner?.title ? <span>{banner.title}</span> : defaults.title;
   const subtitle = banner?.subtitle || defaults.subtitle;
-  const primary = banner?.link
-    ? { to: banner.link, label: 'Подробнее' }
-    : defaults.ctaPrimary;
+  const primary = banner?.link ? { to: banner.link, label: 'Подробнее' } : defaults.ctaPrimary;
   const secondary = {
     to: heroBlock?.ctaSecondaryLink || defaults.ctaSecondary.to,
     label: heroBlock?.ctaSecondaryLabel || defaults.ctaSecondary.label,
@@ -50,65 +89,82 @@ export default function Hero() {
   const badge = heroBlock?.badge || defaults.badge;
 
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-brand-navy text-white">
+    <section className="relative overflow-hidden bg-ink text-tx-inv">
+      {/* цифровая сетка с затуханием */}
+      <div
+        className="absolute inset-0 bg-grid-ink pointer-events-none"
+        style={{ maskImage: 'radial-gradient(120% 90% at 30% 20%, #000 40%, transparent 78%)', WebkitMaskImage: 'radial-gradient(120% 90% at 30% 20%, #000 40%, transparent 78%)' }}
+        aria-hidden="true"
+      />
       {banner?.image && (
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-25"
+          className="absolute inset-0 bg-cover bg-center opacity-20"
           style={{ backgroundImage: `url(${banner.image})` }}
-          aria-hidden
+          aria-hidden="true"
         />
       )}
-      <div className="absolute inset-0 opacity-30">
-        <div
-          className="absolute inset-0 bg-gradient-to-br from-brand-accent/40 via-transparent to-brand-navy animate-gradient-x"
-          style={{ backgroundSize: '200% 200%' }}
-        />
-        <div className="absolute top-20 left-10 w-72 h-72 bg-brand-accent/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+      {/* инженерная орбитальная сцена — выходит за края экрана */}
+      <div
+        className="absolute pointer-events-none max-md:opacity-30 max-md:-right-56 max-md:-bottom-44 max-md:top-auto md:-top-36 md:-right-40 lg:-right-24 xl:right-0"
+        style={{ width: 780, height: 680 }}
+        aria-hidden="true"
+      >
+        <OrbitalScene className="w-full h-full" />
       </div>
-
-      <div className="container-narrow relative z-10 section-padding w-full">
+      <div className="container-tb relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 1, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="max-w-3xl"
+          transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] }}
+          className="max-w-2xl py-20 md:py-28 xl:py-32"
         >
           {!loading && (
-            <span className="inline-block px-4 py-1.5 rounded-full glass text-sm text-brand-accent mb-6">
+            <p className="font-tech text-[10px] tracking-[.22em] uppercase text-tx-inv2 flex items-center gap-3 mb-6">
+              <span className="w-7 h-0.5 bg-g1 rounded-full flex-none" aria-hidden="true" />
               {badge}
-            </span>
+            </p>
           )}
-          <h1 className="heading-1 mb-6">{title}</h1>
-          <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl">{subtitle}</p>
+          <h1 className="font-display font-semibold text-[32px] leading-[1.1] md:text-[46px] lg:text-[52px] md:leading-[1.08] mb-5">
+            {title}
+          </h1>
+          <p className="text-base md:text-lg text-tx-inv2 mb-8 max-w-xl">{subtitle}</p>
           <div className="flex flex-wrap gap-4">
             <BannerLink href={primary.to} className="btn-primary">
               {primary.label}
             </BannerLink>
-            <BannerLink href={secondary.to} className="btn-outline border-white text-white hover:bg-white hover:text-brand-navy">
+            <BannerLink href={secondary.to} className="btn-secondary !border-white/15 !text-tx-inv hover:!border-brand-magenta">
               {secondary.label}
             </BannerLink>
           </div>
+          <div className="flex flex-wrap gap-2.5 mt-9">
+            <span className="font-tech text-[8.5px] tracking-[.16em] uppercase text-tx-inv2 border border-white/10 rounded-lg px-3 py-2">Moysklad · Partner</span>
+            <span className="font-tech text-[8.5px] tracking-[.16em] uppercase text-tx-inv2 border border-white/10 rounded-lg px-3 py-2">Bitrix24 · Partner</span>
+            <span className="font-tech text-[8.5px] tracking-[.16em] uppercase text-tx-inv2 border border-white/10 rounded-lg px-3 py-2">Since 2017 · KZ</span>
+          </div>
         </motion.div>
+      </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl"
-        >
+      {/* статистика: Michroma-цифры со счётчиками */}
+      <div className="relative z-10 border-t border-white/10">
+        <div className="container-tb grid grid-cols-2 md:grid-cols-4">
           {[
-            { value: `${stats.projects}+`, label: 'Проектов' },
-            { value: `${stats.clients}+`, label: 'Клиентов' },
-            { value: `${stats.years}`, label: 'Лет на рынке' },
-            { value: `${stats.integrations}+`, label: 'Интеграций' },
-          ].map((s) => (
-            <div key={s.label} className="glass rounded-2xl p-6 text-center">
-              <div className="text-3xl md:text-4xl font-bold text-brand-accent">{s.value}</div>
-              <div className="text-sm text-gray-400 mt-1">{s.label}</div>
+            { value: stats.projects, suffix: '+', label: 'проектов' },
+            { value: stats.clients, suffix: '+', label: 'клиентов' },
+            { value: stats.years, suffix: '', label: 'лет на рынке' },
+            { value: stats.integrations, suffix: '+', label: 'интеграций' },
+          ].map((s, i) => (
+            <div
+              key={s.label}
+              className={`py-5 md:py-6 px-4 md:px-8 border-white/10 ${i > 0 ? 'md:border-l' : ''} ${i % 2 === 1 ? 'border-l md:border-l' : ''}`}
+            >
+              <div className="font-tech text-xl md:text-[26px] tabular-nums">
+                <Counter to={s.value} />
+                {s.suffix}
+              </div>
+              <div className="text-[12.5px] text-tx-inv2 mt-1">{s.label}</div>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
