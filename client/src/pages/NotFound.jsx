@@ -5,7 +5,7 @@ import { PixelCluster } from '../components/ui/Decor';
 export default function NotFound() {
   return (
     <>
-      <SEO title="404" description="Страница не найдена" />
+      <SEO title="404" description="Страница не найдена" noindex />
       <section className="relative overflow-hidden section-pad min-h-[70vh] flex items-center bg-paper bg-grid-paper dark:bg-ink dark:bg-grid-ink">
         <div className="container-tb relative text-center">
           <PixelCluster size={64} className="mx-auto mb-6" />
