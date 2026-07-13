@@ -52,22 +52,26 @@ export default function ServicePage() {
   const contacts = settings.contacts || {};
 
   useEffect(() => {
+    setLoading(true);
+    setService(null);
     api
       .get(`/services/${slug}`)
       .then(({ data }) => setService(data))
-      .catch(() => setService(fallback[slug] || null))
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, [slug]);
 
-  if (loading) {
-    return (
-      <div className="section-pad container-tb">
-        <CardSkeleton />
-      </div>
-    );
-  }
+  // fallback рендерится сразу (SSR/SEO + без скелета), данные API перекрывают его
+  const shown = service || fallback[slug];
 
-  if (!service) {
+  if (!shown) {
+    if (loading) {
+      return (
+        <div className="section-pad container-tb">
+          <CardSkeleton />
+        </div>
+      );
+    }
     return (
       <div className="section-pad container-tb text-center">
         <h1 className="heading-2">Услуга не найдена</h1>
@@ -80,7 +84,11 @@ export default function ServicePage() {
 
   return (
     <>
-      <SEO title={service.title} description={service.shortDescription} path={`/services/${slug}`} />
+      <SEO
+        title={`${shown.title} в Казахстане — внедрение и настройка`}
+        description={`${shown.shortDescription}. Внедрение, интеграция и поддержка от TB Group — Алматы, работаем по всему Казахстану.`}
+        path={`/services/${slug}`}
+      />
 
       {/* Шапка: Ink-панель с цифровой сеткой */}
       <section className="relative overflow-hidden bg-ink text-tx-inv">
@@ -90,16 +98,16 @@ export default function ServicePage() {
           aria-hidden="true"
         />
         <div className="container-tb relative py-14 md:py-20">
-          <Breadcrumbs items={[{ label: 'Услуги', href: '/#services' }, { label: service.title }]} />
+          <Breadcrumbs items={[{ label: 'Услуги', href: '/#services' }, { label: shown.title }]} />
           <motion.h1
             initial={{ opacity: 1, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
             className="heading-1 mb-4"
           >
-            {service.title}
+            {shown.title}
           </motion.h1>
-          <p className="text-lg md:text-xl text-tx-inv2 max-w-2xl">{service.shortDescription}</p>
+          <p className="text-lg md:text-xl text-tx-inv2 max-w-2xl">{shown.shortDescription}</p>
           {content?.intro && (
             <p className="mt-6 text-[15px] md:text-base text-tx-inv3 max-w-3xl text-justify [hyphens:auto]">
               {content.intro}
@@ -129,7 +137,7 @@ export default function ServicePage() {
             <p className="eyebrow mb-4">Преимущества</p>
             <h2 className="heading-2 mb-10">Что вы получите</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-              {(service.benefits || []).map((b, i) => (
+              {(shown.benefits || []).map((b, i) => (
                 <div key={b.title} className="card-tb p-6">
                   <span className="font-tech text-[11px] text-tx3 dark:text-tx-inv3">{String(i + 1).padStart(2, '0')}</span>
                   <h3 className="font-bold mt-3 mb-1.5">{b.title}</h3>
@@ -172,7 +180,7 @@ export default function ServicePage() {
         </section>
       )}
 
-      {service.steps?.length > 0 && (
+      {shown.steps?.length > 0 && (
         <section className="section-pad bg-paper-2 dark:bg-ink-2">
           <div className="container-tb">
             <p className="eyebrow mb-4">Процесс</p>
@@ -180,7 +188,7 @@ export default function ServicePage() {
             <div className="relative max-w-2xl">
               <span className="absolute left-[19px] top-2 bottom-2 w-px bg-g2 opacity-40" aria-hidden="true" />
               <div className="space-y-6">
-                {service.steps.map((step, i) => (
+                {shown.steps.map((step, i) => (
                   <div key={step.title} className="relative flex gap-5 pl-0">
                     <span className="relative z-10 flex-shrink-0 w-10 h-10 rounded-xl bg-g1 text-white flex items-center justify-center font-tech text-[13px]">
                       {i + 1}
@@ -197,13 +205,13 @@ export default function ServicePage() {
         </section>
       )}
 
-      {service.faq?.length > 0 && (
+      {shown.faq?.length > 0 && (
         <section className="section-pad">
           <div className="container-tb max-w-3xl">
             <p className="eyebrow mb-4">FAQ</p>
             <h2 className="heading-2 mb-10">Частые вопросы</h2>
             <div className="space-y-3">
-              {service.faq.map((item) => (
+              {shown.faq.map((item) => (
                 <details key={item.question} className="card-tb !overflow-visible p-5 group">
                   <summary className="font-semibold cursor-pointer list-none flex justify-between items-center gap-4 [&::-webkit-details-marker]:hidden">
                     {item.question}
@@ -226,7 +234,7 @@ export default function ServicePage() {
             <p className="eyebrow mb-4">Заявка</p>
             <h2 className="heading-2 mb-3">Оставить заявку</h2>
             <p className="text-tx2 dark:text-tx-inv2 mb-7">Расскажите о задаче — подготовим предложение</p>
-            <ContactForm service={service.title} />
+            <ContactForm service={shown.title} />
           </div>
           <div className="space-y-6">
             <div className="card-tb p-6 space-y-5">
@@ -268,9 +276,9 @@ export default function ServicePage() {
                 </div>
               )}
             </div>
-            {service.gallery?.length > 0 && (
+            {shown.gallery?.length > 0 && (
               <div className="grid grid-cols-2 gap-4">
-                {service.gallery.map((img, i) => (
+                {shown.gallery.map((img, i) => (
                   <img key={i} src={img} alt="" className="rounded-xl object-cover h-40 w-full" loading="lazy" />
                 ))}
               </div>

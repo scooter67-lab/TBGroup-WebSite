@@ -32,7 +32,7 @@ export default function Reviews() {
 
   return (
     <>
-      <SEO title="Отзывы" description="Отзывы клиентов TB Group" path="/reviews" />
+      <SEO title="Отзывы" description="Отзывы клиентов TB Group о внедрении МойСклад, Битрикс24 и IP-телефонии в Казахстане." path="/reviews" />
       <section className="section-pad">
         <div className="container-tb">
           <Breadcrumbs items={[{ label: 'Отзывы' }]} />

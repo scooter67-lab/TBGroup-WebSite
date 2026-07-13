@@ -13,4 +13,8 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 600,
   },
+  ssr: {
+    // CJS-пакеты бандлим в SSR-сборку (пререндер), иначе ломается named-import
+    noExternal: ['react-helmet-async'],
+  },
 });

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --port 5173",
     "build": "vite build",
+    "build:ssg": "vite build && vite build --ssr src/entry-server.jsx --outDir dist-ssr && node prerender.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

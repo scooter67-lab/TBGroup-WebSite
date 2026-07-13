@@ -40,7 +40,7 @@ export default function Cases() {
 
   return (
     <>
-      <SEO title="Кейсы" description="Проекты внедрения МойСклад, Битрикс24 и телефонии" path="/cases" />
+      <SEO title="Кейсы" description="Проекты внедрения МойСклад, Битрикс24 и IP-телефонии в Казахстане: задачи, решения и результаты клиентов TB Group." path="/cases" />
       <section className="section-pad">
         <div className="container-tb">
           <Breadcrumbs items={[{ label: 'Кейсы' }]} />

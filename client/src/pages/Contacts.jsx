@@ -10,7 +10,7 @@ export default function Contacts() {
 
   return (
     <>
-      <SEO title="Контакты" description="Свяжитесь с TB Group" path="/contacts" />
+      <SEO title="Контакты" description="Контакты TB Group в Алматы: телефон +7 (708) 800-49-49, офис на ул. Рыскулова, 140/4. Консультация по МойСклад, Битрикс24 и телефонии." path="/contacts" />
       <section className="section-pad">
         <div className="container-tb">
           <Breadcrumbs items={[{ label: 'Контакты' }]} />

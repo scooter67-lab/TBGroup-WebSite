@@ -5,7 +5,7 @@ RUN npm ci --legacy-peer-deps
 COPY . .
 ARG VITE_API_URL=/api
 ENV VITE_API_URL=$VITE_API_URL
-RUN npm run build
+RUN npm run build:ssg
 
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html

@@ -11,7 +11,7 @@ export default function About() {
 
   return (
     <>
-      <SEO title="О компании" description="История, команда и партнёры TB Group" path="/about" />
+      <SEO title="О компании" description="TB Group — интегратор облачных решений в Алматы: история, команда и партнёрские статусы МойСклад и Битрикс24." path="/about" />
       <section className="section-pad">
         <div className="container-tb">
           <Breadcrumbs items={[{ label: 'О компании' }]} />
