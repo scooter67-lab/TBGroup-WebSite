@@ -4,16 +4,16 @@ import { getDeal, findRecurringByBaseId, addRecurringDeal } from '../services/bi
 const PRIMARY_SALE_CATEGORY_ID = '30'; // воронка «Первичная продажа лицензии»
 const PRIMARY_SALE_WON_STAGE = 'C30:WON';
 const RENEWAL_CATEGORY_ID = 32; // воронка «Продление лицензии»
-const PERIOD_MONTHS = 1;
 const LEAD_DAYS = 15; // за сколько дней до конца лицензии заводить продление
+// Пользовательское поле сделки с датой окончания лицензии (напр. UF_CRM_LICENSE_END).
+const LICENSE_END_FIELD = process.env.BITRIX24_LICENSE_END_FIELD;
 
 /**
- * START_DATE первой сделки-продления: дата закрытия продажи + период − срок предупреждения.
+ * START_DATE первой сделки-продления: дата окончания лицензии − срок предупреждения.
  * Дальше повторная сделка идёт ежемесячно, каждый раз за LEAD_DAYS до конца периода.
  */
-const computeStartDate = (closeDate) => {
-  const base = closeDate ? new Date(closeDate) : new Date();
-  base.setMonth(base.getMonth() + PERIOD_MONTHS);
+const computeStartDate = (licenseEnd) => {
+  const base = new Date(licenseEnd);
   base.setDate(base.getDate() - LEAD_DAYS);
   return base.toISOString().slice(0, 10); // YYYY-MM-DD
 };
@@ -49,6 +49,18 @@ export const handleDealEvent = async (req, res) => {
       return res.status(200).json({ ok: true });
     }
 
+    // Дата окончания лицензии обязательна — иначе не знаем, когда продлевать.
+    // Менеджер мог закрыть сделку с опозданием, поэтому опираемся на неё, а не на CLOSEDATE.
+    const licenseEnd = LICENSE_END_FIELD ? deal[LICENSE_END_FIELD] : null;
+    if (!licenseEnd) {
+      console.info(
+        '[Bitrix event] у сделки',
+        dealId,
+        'не заполнена дата окончания лицензии — шаблон не создаётся'
+      );
+      return res.status(200).json({ ok: true, skipped: 'no_license_end' });
+    }
+
     // Идемпотентность: не заводим второй шаблон на ту же сделку.
     const existing = await findRecurringByBaseId(dealId);
     if (existing) {
@@ -56,7 +68,7 @@ export const handleDealEvent = async (req, res) => {
       return res.status(200).json({ ok: true });
     }
 
-    const startDate = computeStartDate(deal.CLOSEDATE);
+    const startDate = computeStartDate(licenseEnd);
 
     if (process.env.BITRIX24_EVENT_DRYRUN === '1') {
       console.info('[Bitrix event] DRYRUN: создал бы шаблон', {
