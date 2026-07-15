@@ -72,7 +72,38 @@ const buildDealFields = ({ name, message, company, service, contactId }) => {
     fields.SOURCE_ID = process.env.BITRIX24_LEAD_SOURCE_ID;
   }
 
+  // Воронка сделки (crm.category.list, entityTypeId=2). Без STAGE_ID
+  // сделка попадает в первую стадию этой воронки.
+  if (process.env.BITRIX24_DEAL_CATEGORY_ID) {
+    fields.CATEGORY_ID = process.env.BITRIX24_DEAL_CATEGORY_ID;
+  }
+
   return fields;
+};
+
+/**
+ * Ищет существующий контакт по телефону/email (crm.duplicate.findbycomm),
+ * чтобы не плодить дубли. Возвращает ID или null.
+ * Ошибка поиска не критична — тогда создаём новый контакт.
+ */
+const findExistingContactId = async (baseUrl, { phone, email }) => {
+  const lookups = [];
+  if (phone) lookups.push(['PHONE', phone]);
+  if (email) lookups.push(['EMAIL', email]);
+
+  for (const [type, value] of lookups) {
+    try {
+      const { data } = await axios.get(`${baseUrl}crm.duplicate.findbycomm.json`, {
+        params: { entity_type: 'CONTACT', type, 'values[]': value },
+        timeout: REQUEST_TIMEOUT_MS,
+      });
+      const ids = data?.result?.CONTACT;
+      if (Array.isArray(ids) && ids.length) return ids[0].toString();
+    } catch (err) {
+      console.warn('[Bitrix24] duplicate search failed:', err.message);
+    }
+  }
+  return null;
 };
 
 /**
@@ -127,16 +158,22 @@ export const addBitrix24Lead = async (payload) => {
     throw new Bitrix24Error('Укажите телефон или email', 400);
   }
 
-  const contactId = await callBitrix(
-    baseUrl,
-    'crm.contact.add',
-    buildContactFields({ name: name.trim(), phone, email })
-  );
+  let contactId = await findExistingContactId(baseUrl, { phone, email });
 
-  if (!contactId) {
-    throw new Bitrix24Error('CRM временно недоступна. Попробуйте позже.', 503);
+  if (contactId) {
+    console.info('[Bitrix24] Existing contact reused:', contactId);
+  } else {
+    contactId = await callBitrix(
+      baseUrl,
+      'crm.contact.add',
+      buildContactFields({ name: name.trim(), phone, email })
+    );
+
+    if (!contactId) {
+      throw new Bitrix24Error('CRM временно недоступна. Попробуйте позже.', 503);
+    }
+    console.info('[Bitrix24] Contact created:', contactId);
   }
-  console.info('[Bitrix24] Contact created:', contactId);
 
   const dealId = await callBitrix(
     baseUrl,
