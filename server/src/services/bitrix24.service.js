@@ -190,3 +190,70 @@ export const addBitrix24Lead = async (payload) => {
 
 /** Проверка, настроена ли интеграция */
 export const isBitrix24Configured = () => Boolean(getWebhookBaseUrl());
+
+// ── Продление лицензий: сделки и повторные сделки ────────────────────────────
+
+/** GET-запрос к Bitrix REST (для *.get / *.list). */
+const callBitrixGet = async (baseUrl, method, params) => {
+  try {
+    const { data } = await axios.get(`${baseUrl}${method}.json`, {
+      params,
+      timeout: REQUEST_TIMEOUT_MS,
+    });
+    if (data?.error) {
+      const description = data.error_description || data.error;
+      console.error(`[Bitrix24] ${method} error:`, description);
+      throw new Bitrix24Error('CRM временно недоступна. Попробуйте позже.', 503);
+    }
+    return data?.result;
+  } catch (err) {
+    if (err instanceof Bitrix24Error) throw err;
+    const detail = err.response?.data?.error_description || err.message;
+    console.error(`[Bitrix24] ${method} request failed:`, detail);
+    throw new Bitrix24Error('CRM временно недоступна. Попробуйте позже.', 503);
+  }
+};
+
+/** Поля сделки по ID (или null, если webhook не настроен). */
+export const getDeal = async (id) => {
+  const baseUrl = getWebhookBaseUrl();
+  if (!baseUrl) return null;
+  return callBitrixGet(baseUrl, 'crm.deal.get', { id });
+};
+
+/**
+ * Ищет шаблон повторной сделки по базовой сделке.
+ * @returns {string|null} ID шаблона или null.
+ */
+export const findRecurringByBaseId = async (baseId) => {
+  const baseUrl = getWebhookBaseUrl();
+  if (!baseUrl) return null;
+  const result = await callBitrixGet(baseUrl, 'crm.deal.recurring.list', {
+    'filter[BASED_ID]': baseId,
+    'select[]': 'ID',
+  });
+  const items = Array.isArray(result) ? result : result?.items || [];
+  return items.length ? String(items[0].ID) : null;
+};
+
+/**
+ * Создаёт шаблон повторной сделки (ежемесячно) на базе существующей сделки.
+ * @returns {string|null} ID созданного шаблона.
+ */
+export const addRecurringDeal = async ({ dealId, categoryId, startDate }) => {
+  const baseUrl = getWebhookBaseUrl();
+  if (!baseUrl) return null;
+  const fields = {
+    DEAL_ID: dealId,
+    CATEGORY_ID: String(categoryId),
+    ACTIVE: 'Y',
+    START_DATE: startDate,
+    PARAMS: {
+      MODE: 'multiple',
+      MULTIPLE_TYPE: 'month',
+      MULTIPLE_INTERVAL: 1,
+    },
+  };
+  const result = await callBitrix(baseUrl, 'crm.deal.recurring.add', fields);
+  return result?.toString() || null;
+};

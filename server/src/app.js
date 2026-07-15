@@ -13,6 +13,7 @@ import reviewsRoutes from './routes/reviews.routes.js';
 import servicesRoutes from './routes/services.routes.js';
 import contactRoutes from './routes/contact.routes.js';
 import leadRoutes from './routes/lead.routes.js';
+import bitrixRoutes from './routes/bitrix.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
 import settingsRoutes from './routes/settings.routes.js';
 import statsRoutes from './routes/stats.routes.js';
@@ -44,6 +45,9 @@ const limiter = rateLimit({
   max: 200,
   standardHeaders: true,
   legacyHeaders: false,
+  // Входящие события Bitrix24 (event.bind) не лимитируем — иначе Bitrix
+  // получит 429 и может отключить обработчик.
+  skip: (req) => req.originalUrl.startsWith('/api/integrations/bitrix'),
 });
 app.use('/api', limiter);
 
@@ -76,6 +80,7 @@ app.use('/api/reviews', reviewsRoutes);
 app.use('/api/services', servicesRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/lead', leadRoutes);
+app.use('/api/integrations/bitrix', bitrixRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/stats', statsRoutes);
