@@ -233,7 +233,7 @@ export default function ServicePage() {
           <div>
             <p className="eyebrow mb-4">Заявка</p>
             <h2 className="heading-2 mb-3">Оставить заявку</h2>
-            <p className="text-tx2 dark:text-tx-inv2 mb-7">Расскажите о задаче — подготовим предложение</p>
+            <p className="text-tx2 dark:text-tx-inv2 mb-7">Оставьте контакты — перезвоним и обсудим задачу</p>
             <ContactForm service={shown.title} />
           </div>
           <div className="space-y-6">

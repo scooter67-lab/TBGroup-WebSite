@@ -57,7 +57,7 @@ export default function Contacts() {
                   )}
                 </div>
               )}
-              <h2 className="text-lg font-bold mb-5">Написать нам</h2>
+              <h2 className="text-lg font-bold mb-5">Заказать звонок</h2>
               <ContactForm />
             </div>
 
