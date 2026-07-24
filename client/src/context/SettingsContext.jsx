@@ -6,7 +6,7 @@ import { deepMerge } from '../utils/deepMerge';
 // Фолбэк-контакты: показываются, пока/если API недоступен (данные админки их перекрывают)
 const defaultContacts = {
   phone: '+7 (708) 800-49-49',
-  email: 'yedilturekulov@gmail.com',
+  email: 'info@tbgroup.kz',
   address: 'г. Алматы, ул. Рыскулова, 140/4, оф. 201',
 };
 
