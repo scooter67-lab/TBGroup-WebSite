@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
-import logoLight from '../../assets/logo-light.png';
-import logoDark from '../../assets/logo-dark.png';
+import logoLight from '../../assets/logo-light.webp';
+import logoDark from '../../assets/logo-dark.webp';
 
 // Услуги под общим пунктом меню; Битрикс24 остаётся на верхнем уровне.
 const serviceLinks = [

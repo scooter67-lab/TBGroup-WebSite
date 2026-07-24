@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useSettings } from '../../context/SettingsContext';
 import { DotsWave } from '../ui/Decor';
-import logoDark from '../../assets/logo-dark.png';
+import logoDark from '../../assets/logo-dark.webp';
 
 export default function Footer() {
   const { settings } = useSettings();
