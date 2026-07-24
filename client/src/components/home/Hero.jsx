@@ -149,7 +149,7 @@ export default function Hero() {
         className="absolute inset-0 pointer-events-none max-lg:hidden"
         style={{
           background:
-            'radial-gradient(38% 46% at 56% 58%, rgba(217,70,239,.42) 0%, transparent 70%), radial-gradient(30% 40% at 88% 42%, rgba(37,99,235,.40) 0%, transparent 72%)',
+            'radial-gradient(32% 46% at 66% 58%, rgba(217,70,239,.42) 0%, transparent 70%), radial-gradient(26% 40% at 92% 42%, rgba(37,99,235,.40) 0%, transparent 72%)',
         }}
         aria-hidden="true"
       />
@@ -163,36 +163,39 @@ export default function Hero() {
 
       {/* портрет: во всю высоту секции, в край экрана (за пределы контейнера) */}
       {hasPhoto && (
-        <div className="absolute inset-y-0 right-0 w-[48%] max-lg:hidden pointer-events-none" aria-hidden="true">
-          <img
-            src={PHOTO_SRC}
-            alt=""
-            onError={() => setHasPhoto(false)}
-            className="absolute bottom-0 right-0 h-full w-auto max-w-none object-contain object-bottom"
-          />
-          {/* цветной свет по самой фигуре: маска — альфа портрета */}
-          <div
-            className="absolute inset-0 mix-blend-overlay"
-            style={{
-              background:
-                'linear-gradient(105deg, rgba(217,70,239,.62) 0%, rgba(168,85,247,.30) 30%, transparent 52%, rgba(37,99,235,.55) 100%)',
-              maskImage: `url(${PHOTO_SRC})`,
-              WebkitMaskImage: `url(${PHOTO_SRC})`,
-              maskSize: 'auto 100%',
-              WebkitMaskSize: 'auto 100%',
-              maskPosition: 'right bottom',
-              WebkitMaskPosition: 'right bottom',
-              maskRepeat: 'no-repeat',
-              WebkitMaskRepeat: 'no-repeat',
-            }}
-          />
+        <div className="absolute inset-y-0 right-0 w-[44%] max-lg:hidden pointer-events-none overflow-hidden" aria-hidden="true">
+          {/* масштаб применяется к обёртке целиком, чтобы цветная маска не съезжала с фигуры */}
+          <div className="absolute inset-0" style={{ transform: 'scale(1.22)', transformOrigin: 'bottom right' }}>
+            <img
+              src={PHOTO_SRC}
+              alt=""
+              onError={() => setHasPhoto(false)}
+              className="absolute bottom-0 right-0 h-full w-auto max-w-none object-contain object-bottom"
+            />
+            {/* цветной свет по самой фигуре: маска — альфа портрета */}
+            <div
+              className="absolute inset-0 mix-blend-overlay"
+              style={{
+                background:
+                  'linear-gradient(105deg, rgba(217,70,239,.62) 0%, rgba(168,85,247,.30) 30%, transparent 52%, rgba(37,99,235,.55) 100%)',
+                maskImage: `url(${PHOTO_SRC})`,
+                WebkitMaskImage: `url(${PHOTO_SRC})`,
+                maskSize: 'auto 100%',
+                WebkitMaskSize: 'auto 100%',
+                maskPosition: 'right bottom',
+                WebkitMaskPosition: 'right bottom',
+                maskRepeat: 'no-repeat',
+                WebkitMaskRepeat: 'no-repeat',
+              }}
+            />
+          </div>
         </div>
       )}
 
       <Sparks />
 
       <div className="container-tb relative z-10">
-        <div className="lg:max-w-[640px]">
+        <div className="lg:max-w-[1000px]">
           <motion.div
             initial={{ opacity: 1, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
