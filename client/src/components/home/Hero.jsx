@@ -236,7 +236,7 @@ export default function Hero() {
           {!hasPhoto && (
             <div
               className="absolute pointer-events-none max-lg:hidden"
-              style={{ width: 720, height: 640, top: 300, right: -160 }}
+              style={{ width: 720, height: 640, top: 190, right: -160 }}
               aria-hidden="true"
             >
               <OrbitalScene className="w-full h-full" />
