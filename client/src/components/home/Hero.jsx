@@ -114,9 +114,11 @@ export default function Hero() {
   const banner = getBanner('hero');
   const heroBlock = pages.home?.hero;
   const stats = settings.stats || { projects: 150, clients: 80, years: 8, integrations: 300 };
-  // Портрет кладётся в client/public/hero-person.png. Файла нет — показываем
-  // орбитальную сцену, сборка от этого не зависит.
-  const [hasPhoto, setHasPhoto] = useState(true);
+  // Портрет: положить файл в client/public и вписать сюда его имя
+  // (например '/hero-person.webp'). Пустая строка — показываем орбитальную
+  // сцену. Ждём исходник с прозрачным фоном.
+  const PHOTO_SRC = '';
+  const [hasPhoto, setHasPhoto] = useState(Boolean(PHOTO_SRC));
 
   const title = banner?.title ? <span>{banner.title}</span> : defaults.title;
   const subtitle = banner?.subtitle || defaults.subtitle;
@@ -204,7 +206,7 @@ export default function Hero() {
             />
             {hasPhoto ? (
               <img
-                src="/hero-person.webp"
+                src={PHOTO_SRC}
                 alt=""
                 onError={() => setHasPhoto(false)}
                 className="absolute bottom-0 right-0 xl:-right-[6%] h-[104%] w-auto max-w-none object-contain object-bottom drop-shadow-[0_0_70px_rgba(124,58,237,.5)]"
