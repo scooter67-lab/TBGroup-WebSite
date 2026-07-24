@@ -120,7 +120,7 @@ export default function Hero() {
   const heroBlock = pages.home?.hero;
   const stats = settings.stats || { projects: 150, clients: 80, years: 8, integrations: 300 };
   // Портрет: файл в client/public. Пустая строка — вместо фото орбитальная сцена.
-  const PHOTO_SRC = '';
+  const PHOTO_SRC = '/hero-person.webp';
   const [hasPhoto, setHasPhoto] = useState(Boolean(PHOTO_SRC));
 
   const title = banner?.title ? <span>{banner.title}</span> : defaults.title;
@@ -133,23 +133,23 @@ export default function Hero() {
   const badge = heroBlock?.badge || defaults.badge;
 
   return (
-    <section className="relative overflow-hidden bg-[#241B4F] text-tx-inv">
-      {/* фирменная подложка: индиго-заливка + цифровая сетка по всей ширине */}
+    <section className="relative overflow-hidden bg-[#242451] text-tx-inv">
+      {/* Подложка. В макете фон почти плоский #242451 (замер: разброс по всей
+          площади в пределах 4 единиц), объём даёт не градиент заливки,
+          а цветные источники света ниже. */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(90% 120% at 68% 50%, #33265F 0%, #2A2054 45%, #221A48 75%, #1C1540 100%)',
-        }}
+        style={{ background: 'radial-gradient(75% 110% at 62% 52%, #2B2760 0%, #262252 55%, #221E4B 100%)' }}
         aria-hidden="true"
       />
       <div className="absolute inset-0 bg-grid-ink pointer-events-none opacity-60" aria-hidden="true" />
-      {/* контровой свет: магента слева от фигуры, холодный синий справа */}
+      {/* Контровой свет: магента за плечом фигуры, холодный синий справа от неё.
+          Центры взяты из макета (магента ~58%/52%, синий ~88%/40%). */}
       <div
         className="absolute inset-0 pointer-events-none max-lg:hidden"
         style={{
           background:
-            'radial-gradient(32% 46% at 66% 58%, rgba(217,70,239,.42) 0%, transparent 70%), radial-gradient(26% 40% at 92% 42%, rgba(37,99,235,.40) 0%, transparent 72%)',
+            'radial-gradient(30% 44% at 58% 52%, rgba(217,70,239,.50) 0%, transparent 72%), radial-gradient(24% 38% at 88% 40%, rgba(37,99,235,.45) 0%, transparent 74%)',
         }}
         aria-hidden="true"
       />
@@ -161,18 +161,35 @@ export default function Hero() {
         />
       )}
 
-      {/* портрет: во всю высоту секции, в край экрана (за пределы контейнера) */}
-      {hasPhoto && (
-        <div className="absolute inset-y-0 right-0 w-[44%] max-lg:hidden pointer-events-none overflow-hidden" aria-hidden="true">
-          {/* масштаб применяется к обёртке целиком, чтобы цветная маска не съезжала с фигуры */}
-          <div className="absolute inset-0" style={{ transform: 'scale(1.22)', transformOrigin: 'bottom right' }}>
+      <Sparks />
+
+      {/* Верхняя часть: обрезает фигуру ровно по линии полосы статистики,
+          как в макете. */}
+      <div className="relative overflow-hidden">
+        {/* Портрет. Размеры сняты с макета: ширина 37.3% вьюпорта, правый край
+            на 89% (отступ 11%), верх кепки на ~5% высоты блока. Задаём именно
+            ШИРИНУ — при задании высоты фигура выходит в 1.6 раза уже макета. */}
+        {hasPhoto && (
+          <div
+            className="absolute top-[2%] w-[32%] max-lg:hidden pointer-events-none"
+            style={{
+              right: '15%',
+              // В исходном кадре тело упирается в рамку, поэтому без маски по
+              // краям виден резкий прямоугольный обрез. Радиальная маска
+              // растворяет края в подсветке — как в макете.
+              maskImage: 'radial-gradient(58% 62% at 50% 40%, #000 48%, transparent 90%)',
+              WebkitMaskImage: 'radial-gradient(58% 62% at 50% 40%, #000 48%, transparent 90%)',
+            }}
+            aria-hidden="true"
+          >
             <img
               src={PHOTO_SRC}
               alt=""
               onError={() => setHasPhoto(false)}
-              className="absolute bottom-0 right-0 h-full w-auto max-w-none object-contain object-bottom"
+              className="w-full h-auto"
             />
-            {/* цветной свет по самой фигуре: маска — альфа портрета */}
+            {/* Цветной свет по самой фигуре: маска — альфа портрета, поэтому
+                подсветка ложится на человека и не пачкает фон вокруг. */}
             <div
               className="absolute inset-0 mix-blend-overlay"
               style={{
@@ -180,68 +197,70 @@ export default function Hero() {
                   'linear-gradient(105deg, rgba(217,70,239,.62) 0%, rgba(168,85,247,.30) 30%, transparent 52%, rgba(37,99,235,.55) 100%)',
                 maskImage: `url(${PHOTO_SRC})`,
                 WebkitMaskImage: `url(${PHOTO_SRC})`,
-                maskSize: 'auto 100%',
-                WebkitMaskSize: 'auto 100%',
-                maskPosition: 'right bottom',
-                WebkitMaskPosition: 'right bottom',
+                maskSize: '100% auto',
+                WebkitMaskSize: '100% auto',
+                maskPosition: 'top center',
+                WebkitMaskPosition: 'top center',
                 maskRepeat: 'no-repeat',
                 WebkitMaskRepeat: 'no-repeat',
               }}
             />
           </div>
-        </div>
-      )}
+        )}
 
-      <Sparks />
-
-      <div className="container-tb relative z-10">
-        <div className="lg:max-w-[1000px]">
-          <motion.div
-            initial={{ opacity: 1, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] }}
-            className="py-20 md:py-24 xl:py-28"
-          >
-            {!loading && (
-              <p className="text-[10px] font-semibold tracking-[.22em] uppercase text-tx-inv2 flex items-center gap-3 mb-6">
-                <span className="w-7 h-0.5 bg-g1 rounded-full flex-none" aria-hidden="true" />
-                {badge}
-              </p>
-            )}
-            <h1 className="font-display font-semibold text-[30px] leading-[1.14] md:text-[44px] lg:text-[50px] md:leading-[1.1] mb-6">
-              {title}
-            </h1>
-            <p className="text-base md:text-lg text-tx-inv2 mb-8 max-w-xl">{subtitle}</p>
-            <div className="flex flex-wrap gap-4">
-              <BannerLink href={primary.to} className="btn-primary">
-                {primary.label}
-              </BannerLink>
-              <BannerLink
-                href={secondary.to}
-                className="btn-secondary !border-white/15 !text-tx-inv hover:!border-brand-magenta"
-              >
-                {secondary.label}
-              </BannerLink>
-            </div>
-            <div className="flex flex-wrap gap-2.5 mt-9">
-              <span className={chipCls}>Междунар. партнёр</span>
-              <span className={chipCls}>Битрикс24 партнёр</span>
-              <span className={`${chipCls} font-tech !font-normal text-[8.5px]`}>Since 2017 · KZ</span>
-            </div>
-          </motion.div>
-
-          {/* без портрета правое поле занимает орбитальная сцена — ниже и правее
-              текста, чтобы не наезжать на заголовок (центр графики смещён
-              относительно её же центра ядра на ~51%/50% viewBox) */}
-          {!hasPhoto && (
-            <div
-              className="absolute pointer-events-none max-lg:hidden"
-              style={{ width: 720, height: 640, top: 190, right: -160 }}
-              aria-hidden="true"
+        {/* Текстовая колонка. Контейнер шире стандартного: в макете текст hero
+            начинается на 17.8% вьюпорта — левее колонок статистики (19.8%). */}
+        <div className="max-w-[1304px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="lg:max-w-[1000px]">
+            <motion.div
+              initial={{ opacity: 1, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] }}
+              className="py-20 md:py-24 xl:py-28"
             >
-              <OrbitalScene className="w-full h-full" />
-            </div>
-          )}
+              {!loading && (
+                <p className="text-[10px] font-semibold tracking-[.22em] uppercase text-tx-inv2 flex items-center gap-3 mb-6">
+                  <span className="w-7 h-0.5 bg-g1 rounded-full flex-none" aria-hidden="true" />
+                  {badge}
+                </p>
+              )}
+              {/* 43px против прежних 50px: в макете строка «Система, которая
+                  делает» занимает 36.3% вьюпорта, у нас на 50px выходило 42.1%. */}
+              {/* 26px на самых узких: Unbounded широкий, и на 320px строка
+                  «бизнес управляемым» при 30px уже не помещалась. */}
+              <h1 className="font-display font-semibold text-[26px] leading-[1.18] sm:text-[30px] md:text-[40px] lg:text-[43px] md:leading-[1.21] mb-6">
+                {title}
+              </h1>
+              <p className="text-base md:text-lg text-tx-inv2 mb-6 max-w-xl">{subtitle}</p>
+              <div className="flex flex-wrap gap-4">
+                <BannerLink href={primary.to} className="btn-primary">
+                  {primary.label}
+                </BannerLink>
+                <BannerLink
+                  href={secondary.to}
+                  className="btn-secondary !border-white/15 !text-tx-inv hover:!border-brand-magenta"
+                >
+                  {secondary.label}
+                </BannerLink>
+              </div>
+              <div className="flex flex-wrap gap-2.5 mt-11">
+                <span className={chipCls}>Междунар. партнёр</span>
+                <span className={chipCls}>Битрикс24 партнёр</span>
+                <span className={`${chipCls} font-tech !font-normal text-[8.5px]`}>Since 2017 · KZ</span>
+              </div>
+            </motion.div>
+
+            {/* без портрета правое поле занимает орбитальная сцена */}
+            {!hasPhoto && (
+              <div
+                className="absolute pointer-events-none max-lg:hidden"
+                style={{ width: 720, height: 640, top: 190, right: -160 }}
+                aria-hidden="true"
+              >
+                <OrbitalScene className="w-full h-full" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
