@@ -114,10 +114,8 @@ export default function Hero() {
   const banner = getBanner('hero');
   const heroBlock = pages.home?.hero;
   const stats = settings.stats || { projects: 150, clients: 80, years: 8, integrations: 300 };
-  // Портрет: положить файл в client/public и вписать сюда его имя
-  // (например '/hero-person.webp'). Пустая строка — показываем орбитальную
-  // сцену. Ждём исходник с прозрачным фоном.
-  const PHOTO_SRC = '';
+  // Портрет: файл в client/public. Пустая строка — вместо фото орбитальная сцена.
+  const PHOTO_SRC = '/hero-person.webp';
   const [hasPhoto, setHasPhoto] = useState(Boolean(PHOTO_SRC));
 
   const title = banner?.title ? <span>{banner.title}</span> : defaults.title;
