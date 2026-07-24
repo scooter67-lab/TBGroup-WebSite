@@ -19,9 +19,6 @@ services:
       - tbgroup-net
 
   server:
-    # Образ собирает GitHub Actions и кладёт в GHCR; `build` остаётся фолбэком
-    # для локальной разработки и аварийной сборки прямо на сервере.
-    image: ghcr.io/${GHCR_OWNER:-scooter67-lab}/tbgroup-api:${IMAGE_TAG:-latest}
     build:
       context: ./server
       dockerfile: Dockerfile
@@ -48,7 +45,6 @@ services:
       - tbgroup-net
 
   client:
-    image: ghcr.io/${GHCR_OWNER:-scooter67-lab}/tbgroup-client:${IMAGE_TAG:-latest}
     build:
       context: ./client
       dockerfile: Dockerfile
@@ -66,7 +62,6 @@ services:
       - tbgroup-net
 
   admin:
-    image: ghcr.io/${GHCR_OWNER:-scooter67-lab}/tbgroup-admin:${IMAGE_TAG:-latest}
     build:
       context: ./admin
       dockerfile: Dockerfile
