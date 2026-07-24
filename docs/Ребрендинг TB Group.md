@@ -186,11 +186,24 @@ tags: [ребрендинг, brandbook, дизайн, tbgroup]
   домен tbgroup.ru → заменено на tbgroup.kz; 301 www→apex в nginx; статичная meta
   description; JSON-LD LocalBusiness (Алматы); фирменная og-cover.png 1200×630;
   lastmod в sitemap; noindex на 404. Всё проверено curl-ом на проде.
-- ⏭️ SEO-задачи впереди: **пререндер 8 маршрутов при сборке** (SPA отдаёт ботам
-  пустой HTML — главная оставшаяся проблема); регистрация в Google Search Console
-  и Яндекс.Вебмастере + отправка sitemap; Google Business Profile / Яндекс.Бизнес /
-  2ГИС (Алматы); гео-вхождения в тексты и title услуг («…в Казахстане/Алматы»);
-  динамический sitemap с кейсами, когда их станет больше.
+- ✅ **SSG-пререндер задеплоен 2026-07-13** (коммиты `0e641c9`, `34c3048`): все
+  8 маршрутов рендерятся в статический HTML при сборке (`build:ssg`:
+  vite build → vite build --ssr entry-server.jsx → prerender.mjs с
+  `react-dom/static prerender`, headless-браузер НЕ нужен — чистый Node в Docker).
+  Боты получают полный контент + мету без JS. Ключевые детали реализации:
+  - `ssr.noExternal: ['react-helmet-async']` в vite.config (CJS-interop);
+  - ServicePage рендерит fallback сразу (`shown = service || fallback[slug]`) —
+    и для SSR, и чтобы не было скелета до ответа API;
+  - client/nginx.conf: `try_files $uri $uri/index.html /index.html` — без
+    301-редиректа на слэш (canonical без слэша);
+  - клиент по-прежнему `createRoot().render` (не hydrate) — осознанно: проще
+    и без риска mismatch, перерисовка незаметна.
+  - гео-мета: title услуг «…в Казахстане», описания страниц с Алматы/KZ.
+  Проверено на проде: title/canonical/контент в сыром HTML, все страницы 200.
+- ⏭️ SEO-задачи впереди (ручные, на стороне заказчика): Google Search Console +
+  Яндекс.Вебмастер (отправить sitemap, регион KZ); Google Business Profile /
+  Яндекс.Бизнес / 2ГИС (Алматы); динамический sitemap с кейсами, когда их станет
+  больше. Помнить: после добавления страниц — обновлять routes в prerender.mjs.
 - ⏭️ Контент-задачи: кейсы, отзывы, фото команды/офиса, координаты карты в админке,
   корпоративный email вместо @gmail, обновление стайлгайд-артефакта (убрать
   диагонали), фактчек «официальный партнёр МойСклад».
