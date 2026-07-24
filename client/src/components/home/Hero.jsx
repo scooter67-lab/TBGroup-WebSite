@@ -191,7 +191,7 @@ export default function Hero() {
           </motion.div>
 
           {/* правая колонка композиции: портрет в фирменной подсветке */}
-          <div className="relative min-h-[320px] lg:min-h-[560px] max-lg:hidden">
+          <div className="relative min-h-[320px] lg:min-h-[620px] max-lg:hidden">
             <Sparks />
             {/* свечение за фигурой */}
             <div
@@ -204,10 +204,10 @@ export default function Hero() {
             />
             {hasPhoto ? (
               <img
-                src="/hero-person.png"
+                src="/hero-person.webp"
                 alt=""
                 onError={() => setHasPhoto(false)}
-                className="absolute bottom-0 right-0 h-full w-auto max-w-none object-contain object-bottom drop-shadow-[0_0_60px_rgba(124,58,237,.45)]"
+                className="absolute bottom-0 right-0 xl:-right-[6%] h-[104%] w-auto max-w-none object-contain object-bottom drop-shadow-[0_0_70px_rgba(124,58,237,.5)]"
               />
             ) : (
               <div className="absolute inset-0" aria-hidden="true">
