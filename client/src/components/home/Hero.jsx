@@ -120,7 +120,7 @@ export default function Hero() {
   const heroBlock = pages.home?.hero;
   const stats = settings.stats || { projects: 150, clients: 80, years: 8, integrations: 300 };
   // Портрет: файл в client/public. Пустая строка — вместо фото орбитальная сцена.
-  const PHOTO_SRC = '/hero-person.webp';
+  const PHOTO_SRC = '';
   const [hasPhoto, setHasPhoto] = useState(Boolean(PHOTO_SRC));
 
   const title = banner?.title ? <span>{banner.title}</span> : defaults.title;
