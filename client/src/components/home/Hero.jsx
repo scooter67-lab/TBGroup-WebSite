@@ -5,18 +5,28 @@ import { useSettings } from '../../context/SettingsContext';
 import { OrbitalScene } from '../ui/Decor';
 
 const defaults = {
-  badge: 'TB Group · Казахстан',
+  badge: 'Создаём решения для бизнеса',
   title: (
     <>
-      Системы, которые{' '}
-      <em className="not-italic bg-g1 bg-clip-text text-transparent">работают на ваш рост</em>
+      <span className="block">Система, которая делает</span>
+      <span className="block bg-gradient-to-r from-brand-purple via-[#7C3AED] to-brand-magenta bg-clip-text text-transparent">
+        бизнес управляемым
+      </span>
+      <span className="block bg-gradient-to-r from-brand-magenta to-brand-orange bg-clip-text text-transparent">
+        и масштабируемым
+      </span>
     </>
   ),
   subtitle:
-    'Внедряем МойСклад, Битрикс24 и IP-телефонию: связываем склад, продажи и коммуникации в один управляемый контур.',
-  ctaPrimary: { to: '/contacts', label: 'Бесплатная консультация' },
+    'Проектируем и внедряем единую архитектуру бизнеса: от первой заявки и работы отдела продаж до склада, финансов, аналитики и контроля команды.',
+  ctaPrimary: { to: '/contacts', label: 'Получить стратегию автоматизации' },
   ctaSecondary: { to: '/cases', label: 'Смотреть кейсы' },
 };
+
+// Кириллица набирается Inter: Michroma — латиница-only, русские буквы в ней
+// разъезжаются. Латинские лейблы остаются на Michroma (font-tech).
+const chipCls =
+  'text-[9px] font-semibold tracking-[.16em] uppercase text-tx-inv2 border border-white/10 rounded-lg px-3 py-2';
 
 function BannerLink({ href, className, children }) {
   const external = href.startsWith('http');
@@ -73,11 +83,40 @@ function Counter({ to }) {
   return <span ref={ref}>{val}</span>;
 }
 
+/** Искры-плюсы из бренд-графики (правое поле композиции) */
+function Sparks() {
+  return (
+    <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      {[
+        { top: '12%', right: '4%', size: 10, color: '#D946EF', o: 0.7 },
+        { top: '22%', right: '10%', size: 7, color: '#A78BFA', o: 0.5 },
+        { top: '46%', right: '2%', size: 8, color: '#F97316', o: 0.6 },
+        { top: '64%', right: '8%', size: 6, color: '#D946EF', o: 0.45 },
+      ].map((s, i) => (
+        <svg
+          key={i}
+          className="absolute"
+          style={{ top: s.top, right: s.right, opacity: s.o }}
+          width={s.size}
+          height={s.size}
+          viewBox="0 0 10 10"
+          fill="none"
+        >
+          <path d="M5 0v10M0 5h10" stroke={s.color} strokeWidth="1.4" strokeLinecap="round" />
+        </svg>
+      ))}
+    </div>
+  );
+}
+
 export default function Hero() {
   const { settings, pages, getBanner, loading } = useSettings();
   const banner = getBanner('hero');
   const heroBlock = pages.home?.hero;
   const stats = settings.stats || { projects: 150, clients: 80, years: 8, integrations: 300 };
+  // Портрет кладётся в client/public/hero-person.png. Файла нет — показываем
+  // орбитальную сцену, сборка от этого не зависит.
+  const [hasPhoto, setHasPhoto] = useState(true);
 
   const title = banner?.title ? <span>{banner.title}</span> : defaults.title;
   const subtitle = banner?.subtitle || defaults.subtitle;
@@ -90,10 +129,21 @@ export default function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-ink text-tx-inv">
-      {/* цифровая сетка с затуханием */}
+      {/* фирменная подложка: индиго-заливка + цифровая сетка */}
       <div
-        className="absolute inset-0 bg-grid-ink pointer-events-none"
-        style={{ maskImage: 'radial-gradient(120% 90% at 30% 20%, #000 40%, transparent 78%)', WebkitMaskImage: 'radial-gradient(120% 90% at 30% 20%, #000 40%, transparent 78%)' }}
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(120% 100% at 62% 45%, #35216E 0%, #241A52 38%, #150F35 70%, #0E0A1F 100%)',
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-0 bg-grid-ink pointer-events-none opacity-70"
+        style={{
+          maskImage: 'radial-gradient(120% 95% at 30% 25%, #000 45%, transparent 82%)',
+          WebkitMaskImage: 'radial-gradient(120% 95% at 30% 25%, #000 45%, transparent 82%)',
+        }}
         aria-hidden="true"
       />
       {banner?.image && (
@@ -103,45 +153,69 @@ export default function Hero() {
           aria-hidden="true"
         />
       )}
-      {/* инженерная орбитальная сцена — выходит за края экрана */}
-      <div
-        className="absolute pointer-events-none max-md:opacity-30 max-md:-right-56 max-md:-bottom-44 max-md:top-auto md:-top-36 md:-right-40 lg:-right-24 xl:right-0"
-        style={{ width: 780, height: 680 }}
-        aria-hidden="true"
-      >
-        <OrbitalScene className="w-full h-full" />
-      </div>
+
       <div className="container-tb relative z-10">
-        <motion.div
-          initial={{ opacity: 1, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] }}
-          className="max-w-2xl py-20 md:py-28 xl:py-32"
-        >
-          {!loading && (
-            <p className="font-tech text-[10px] tracking-[.22em] uppercase text-tx-inv2 flex items-center gap-3 mb-6">
-              <span className="w-7 h-0.5 bg-g1 rounded-full flex-none" aria-hidden="true" />
-              {badge}
-            </p>
-          )}
-          <h1 className="font-display font-semibold text-[32px] leading-[1.1] md:text-[46px] lg:text-[52px] md:leading-[1.08] mb-5">
-            {title}
-          </h1>
-          <p className="text-base md:text-lg text-tx-inv2 mb-8 max-w-xl">{subtitle}</p>
-          <div className="flex flex-wrap gap-4">
-            <BannerLink href={primary.to} className="btn-primary">
-              {primary.label}
-            </BannerLink>
-            <BannerLink href={secondary.to} className="btn-secondary !border-white/15 !text-tx-inv hover:!border-brand-magenta">
-              {secondary.label}
-            </BannerLink>
+        <div className="grid lg:grid-cols-[1.02fr_0.98fr] gap-8 items-center">
+          <motion.div
+            initial={{ opacity: 1, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] }}
+            className="py-20 md:py-24 xl:py-28"
+          >
+            {!loading && (
+              <p className="text-[10px] font-semibold tracking-[.22em] uppercase text-tx-inv2 flex items-center gap-3 mb-6">
+                <span className="w-7 h-0.5 bg-g1 rounded-full flex-none" aria-hidden="true" />
+                {badge}
+              </p>
+            )}
+            <h1 className="font-display font-semibold text-[30px] leading-[1.14] md:text-[44px] lg:text-[50px] md:leading-[1.1] mb-6">
+              {title}
+            </h1>
+            <p className="text-base md:text-lg text-tx-inv2 mb-8 max-w-xl">{subtitle}</p>
+            <div className="flex flex-wrap gap-4">
+              <BannerLink href={primary.to} className="btn-primary">
+                {primary.label}
+              </BannerLink>
+              <BannerLink
+                href={secondary.to}
+                className="btn-secondary !border-white/15 !text-tx-inv hover:!border-brand-magenta"
+              >
+                {secondary.label}
+              </BannerLink>
+            </div>
+            <div className="flex flex-wrap gap-2.5 mt-9">
+              <span className={chipCls}>Междунар. партнёр</span>
+              <span className={chipCls}>Битрикс24 партнёр</span>
+              <span className={`${chipCls} font-tech !font-normal text-[8.5px]`}>Since 2017 · KZ</span>
+            </div>
+          </motion.div>
+
+          {/* правая колонка композиции: портрет в фирменной подсветке */}
+          <div className="relative min-h-[320px] lg:min-h-[560px] max-lg:hidden">
+            <Sparks />
+            {/* свечение за фигурой */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  'radial-gradient(52% 46% at 52% 52%, rgba(217,70,239,.34) 0%, rgba(124,58,237,.22) 42%, transparent 72%)',
+              }}
+              aria-hidden="true"
+            />
+            {hasPhoto ? (
+              <img
+                src="/hero-person.png"
+                alt=""
+                onError={() => setHasPhoto(false)}
+                className="absolute bottom-0 right-0 h-full w-auto max-w-none object-contain object-bottom drop-shadow-[0_0_60px_rgba(124,58,237,.45)]"
+              />
+            ) : (
+              <div className="absolute inset-0" aria-hidden="true">
+                <OrbitalScene className="w-full h-full" />
+              </div>
+            )}
           </div>
-          <div className="flex flex-wrap gap-2.5 mt-9">
-            <span className="font-tech text-[8.5px] tracking-[.16em] uppercase text-tx-inv2 border border-white/10 rounded-lg px-3 py-2">Moysklad · Partner</span>
-            <span className="font-tech text-[8.5px] tracking-[.16em] uppercase text-tx-inv2 border border-white/10 rounded-lg px-3 py-2">Bitrix24 · Partner</span>
-            <span className="font-tech text-[8.5px] tracking-[.16em] uppercase text-tx-inv2 border border-white/10 rounded-lg px-3 py-2">Since 2017 · KZ</span>
-          </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* статистика: Michroma-цифры со счётчиками */}
@@ -149,7 +223,7 @@ export default function Hero() {
         <div className="container-tb grid grid-cols-2 md:grid-cols-4">
           {[
             { value: stats.projects, suffix: '+', label: 'проектов' },
-            { value: stats.clients, suffix: '+', label: 'клиентов' },
+            { value: stats.clients, suffix: '+', label: 'внедрений' },
             { value: stats.years, suffix: '', label: 'лет на рынке' },
             { value: stats.integrations, suffix: '+', label: 'интеграций' },
           ].map((s, i) => (

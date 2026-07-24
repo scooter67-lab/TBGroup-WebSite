@@ -1,7 +1,7 @@
 export const defaultPages = {
   home: {
     hero: {
-      badge: 'Облачные решения для бизнеса',
+      badge: 'Создаём решения для бизнеса',
       ctaSecondaryLabel: 'Смотреть кейсы',
       ctaSecondaryLink: '/cases',
     },
