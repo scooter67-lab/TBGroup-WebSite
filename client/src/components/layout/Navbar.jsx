@@ -1,14 +1,18 @@
 import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import logoLight from '../../assets/logo-light.png';
 import logoDark from '../../assets/logo-dark.png';
 
-const links = [
+// Услуги под общим пунктом меню; Битрикс24 остаётся на верхнем уровне.
+const serviceLinks = [
   { to: '/services/moysklad', label: 'МойСклад' },
-  { to: '/services/bitrix24', label: 'Битрикс24' },
   { to: '/services/telephony', label: 'Телефония' },
+];
+
+const links = [
+  { to: '/services/bitrix24', label: 'Битрикс24' },
   { to: '/cases', label: 'Кейсы' },
   { to: '/reviews', label: 'Отзывы' },
   { to: '/about', label: 'О компании' },
@@ -31,6 +35,14 @@ function MoonIcon() {
   );
 }
 
+function ChevronIcon({ open }) {
+  return (
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
+
 const navLinkCls = ({ isActive }) =>
   `relative text-sm font-medium py-1.5 transition-colors ${
     isActive
@@ -41,6 +53,10 @@ const navLinkCls = ({ isActive }) =>
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { dark, toggle } = useTheme();
+  const { pathname } = useLocation();
+  const servicesActive = serviceLinks.some((l) => l.to === pathname);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(servicesActive);
 
   return (
     <header className="sticky top-0 z-40 border-b border-paper-line bg-paper/85 backdrop-blur-xl dark:border-white/10 dark:bg-ink/85">
@@ -51,6 +67,55 @@ export default function Navbar() {
         </Link>
 
         <nav className="hidden lg:flex items-center gap-6" aria-label="Основная навигация">
+          <div
+            className="relative"
+            onMouseEnter={() => setServicesOpen(true)}
+            onMouseLeave={() => setServicesOpen(false)}
+            onKeyDown={(e) => e.key === 'Escape' && setServicesOpen(false)}
+          >
+            <button
+              type="button"
+              onClick={() => setServicesOpen(!servicesOpen)}
+              className={`${navLinkCls({ isActive: servicesActive })} inline-flex items-center gap-1.5`}
+              aria-expanded={servicesOpen}
+              aria-haspopup="true"
+            >
+              Услуги
+              <ChevronIcon open={servicesOpen} />
+            </button>
+
+            <AnimatePresence>
+              {servicesOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.18, ease: [0.22, 0.61, 0.36, 1] }}
+                  className="absolute left-0 top-full pt-3"
+                >
+                  <div className="min-w-[190px] rounded-xl border border-paper-line bg-white p-1.5 shadow-card-h dark:border-white/10 dark:bg-ink-4">
+                    {serviceLinks.map((l) => (
+                      <NavLink
+                        key={l.to}
+                        to={l.to}
+                        onClick={() => setServicesOpen(false)}
+                        className={({ isActive }) =>
+                          `block rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                            isActive
+                              ? 'bg-paper-2 text-tx dark:bg-ink-3 dark:text-tx-inv'
+                              : 'text-tx2 hover:bg-paper-2 hover:text-tx dark:text-tx-inv2 dark:hover:bg-ink-3 dark:hover:text-tx-inv'
+                          }`
+                        }
+                      >
+                        {l.label}
+                      </NavLink>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           {links.map((l) => (
             <NavLink key={l.to} to={l.to} className={navLinkCls}>
               {l.label}
@@ -94,6 +159,29 @@ export default function Navbar() {
             aria-label="Мобильная навигация"
           >
             <div className="px-4 py-4 flex flex-col gap-1">
+              <button
+                type="button"
+                onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+                className="flex items-center justify-between py-2.5 px-2 rounded-lg font-medium text-tx2 dark:text-tx-inv2 hover:bg-paper-2 dark:hover:bg-ink-3"
+                aria-expanded={mobileServicesOpen}
+              >
+                Услуги
+                <ChevronIcon open={mobileServicesOpen} />
+              </button>
+              {mobileServicesOpen && (
+                <div className="ml-2 pl-3 flex flex-col gap-1 border-l border-paper-line dark:border-white/10">
+                  {serviceLinks.map((l) => (
+                    <NavLink
+                      key={l.to}
+                      to={l.to}
+                      onClick={() => setOpen(false)}
+                      className="py-2.5 px-2 rounded-lg font-medium text-tx2 dark:text-tx-inv2 hover:bg-paper-2 dark:hover:bg-ink-3"
+                    >
+                      {l.label}
+                    </NavLink>
+                  ))}
+                </div>
+              )}
               {links.map((l) => (
                 <NavLink
                   key={l.to}
