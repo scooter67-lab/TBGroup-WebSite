@@ -230,11 +230,13 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* без портрета правое поле занимает орбитальная сцена */}
+          {/* без портрета правое поле занимает орбитальная сцена — ниже и правее
+              текста, чтобы не наезжать на заголовок (центр графики смещён
+              относительно её же центра ядра на ~51%/50% viewBox) */}
           {!hasPhoto && (
             <div
-              className="absolute pointer-events-none max-lg:hidden -top-20 -right-24 xl:right-0"
-              style={{ width: 720, height: 640 }}
+              className="absolute pointer-events-none max-lg:hidden"
+              style={{ width: 720, height: 640, top: 300, right: -160 }}
               aria-hidden="true"
             >
               <OrbitalScene className="w-full h-full" />
