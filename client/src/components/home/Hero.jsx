@@ -86,7 +86,12 @@ function Counter({ to }) {
 /** Искры-плюсы из бренд-графики (правое поле композиции) */
 function Sparks() {
   return (
-    <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+    <div className="absolute inset-0 z-[5] pointer-events-none max-lg:hidden" aria-hidden="true">
+      {/* оранжевая точка-акцент */}
+      <span
+        className="absolute rounded-full bg-brand-orange"
+        style={{ top: '46%', right: '3.5%', width: 7, height: 7, opacity: 0.9 }}
+      />
       {[
         { top: '12%', right: '4%', size: 10, color: '#D946EF', o: 0.7 },
         { top: '22%', right: '10%', size: 7, color: '#A78BFA', o: 0.5 },
@@ -128,21 +133,23 @@ export default function Hero() {
   const badge = heroBlock?.badge || defaults.badge;
 
   return (
-    <section className="relative overflow-hidden bg-ink text-tx-inv">
-      {/* фирменная подложка: индиго-заливка + цифровая сетка */}
+    <section className="relative overflow-hidden bg-[#241B4F] text-tx-inv">
+      {/* фирменная подложка: индиго-заливка + цифровая сетка по всей ширине */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(120% 100% at 62% 45%, #35216E 0%, #241A52 38%, #150F35 70%, #0E0A1F 100%)',
+            'radial-gradient(90% 120% at 68% 50%, #33265F 0%, #2A2054 45%, #221A48 75%, #1C1540 100%)',
         }}
         aria-hidden="true"
       />
+      <div className="absolute inset-0 bg-grid-ink pointer-events-none opacity-60" aria-hidden="true" />
+      {/* контровой свет: магента слева от фигуры, холодный синий справа */}
       <div
-        className="absolute inset-0 bg-grid-ink pointer-events-none opacity-70"
+        className="absolute inset-0 pointer-events-none max-lg:hidden"
         style={{
-          maskImage: 'radial-gradient(120% 95% at 30% 25%, #000 45%, transparent 82%)',
-          WebkitMaskImage: 'radial-gradient(120% 95% at 30% 25%, #000 45%, transparent 82%)',
+          background:
+            'radial-gradient(38% 46% at 56% 58%, rgba(217,70,239,.42) 0%, transparent 70%), radial-gradient(30% 40% at 88% 42%, rgba(37,99,235,.40) 0%, transparent 72%)',
         }}
         aria-hidden="true"
       />
@@ -154,8 +161,38 @@ export default function Hero() {
         />
       )}
 
+      {/* портрет: во всю высоту секции, в край экрана (за пределы контейнера) */}
+      {hasPhoto && (
+        <div className="absolute inset-y-0 right-0 w-[48%] max-lg:hidden pointer-events-none" aria-hidden="true">
+          <img
+            src={PHOTO_SRC}
+            alt=""
+            onError={() => setHasPhoto(false)}
+            className="absolute bottom-0 right-0 h-full w-auto max-w-none object-contain object-bottom"
+          />
+          {/* цветной свет по самой фигуре: маска — альфа портрета */}
+          <div
+            className="absolute inset-0 mix-blend-overlay"
+            style={{
+              background:
+                'linear-gradient(105deg, rgba(217,70,239,.62) 0%, rgba(168,85,247,.30) 30%, transparent 52%, rgba(37,99,235,.55) 100%)',
+              maskImage: `url(${PHOTO_SRC})`,
+              WebkitMaskImage: `url(${PHOTO_SRC})`,
+              maskSize: 'auto 100%',
+              WebkitMaskSize: 'auto 100%',
+              maskPosition: 'right bottom',
+              WebkitMaskPosition: 'right bottom',
+              maskRepeat: 'no-repeat',
+              WebkitMaskRepeat: 'no-repeat',
+            }}
+          />
+        </div>
+      )}
+
+      <Sparks />
+
       <div className="container-tb relative z-10">
-        <div className="grid lg:grid-cols-[1.02fr_0.98fr] gap-8 items-center">
+        <div className="lg:max-w-[640px]">
           <motion.div
             initial={{ opacity: 1, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -190,31 +227,16 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* правая колонка композиции: портрет в фирменной подсветке */}
-          <div className="relative min-h-[320px] lg:min-h-[620px] max-lg:hidden">
-            <Sparks />
-            {/* свечение за фигурой */}
+          {/* без портрета правое поле занимает орбитальная сцена */}
+          {!hasPhoto && (
             <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background:
-                  'radial-gradient(52% 46% at 52% 52%, rgba(217,70,239,.34) 0%, rgba(124,58,237,.22) 42%, transparent 72%)',
-              }}
+              className="absolute pointer-events-none max-lg:hidden -top-20 -right-24 xl:right-0"
+              style={{ width: 720, height: 640 }}
               aria-hidden="true"
-            />
-            {hasPhoto ? (
-              <img
-                src={PHOTO_SRC}
-                alt=""
-                onError={() => setHasPhoto(false)}
-                className="absolute bottom-0 right-0 xl:-right-[6%] h-[104%] w-auto max-w-none object-contain object-bottom drop-shadow-[0_0_70px_rgba(124,58,237,.5)]"
-              />
-            ) : (
-              <div className="absolute inset-0" aria-hidden="true">
-                <OrbitalScene className="w-full h-full" />
-              </div>
-            )}
-          </div>
+            >
+              <OrbitalScene className="w-full h-full" />
+            </div>
+          )}
         </div>
       </div>
 
