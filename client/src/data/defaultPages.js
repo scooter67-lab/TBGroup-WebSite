@@ -64,6 +64,17 @@ export const defaultPages = {
     partners: {
       title: 'Сертификаты и партнёры',
       items: ['МойСклад', 'Битрикс24', 'Манго', 'UIS', 'Roistat'],
+      certificates: [
+        { image: '/certificates/bitrix24-partner.webp', title: 'Битрикс24 — бизнес-партнёр 1С-Битрикс' },
+        { image: '/certificates/moysklad-partner.webp', title: 'МойСклад — официальный партнёр' },
+        { image: '/certificates/wazzup-partner.webp', title: 'Wazzup — сертифицированный партнёр' },
+        { image: '/certificates/sipuni-partner.webp', title: 'SIPUNI — официальный партнёр' },
+        { image: '/certificates/pleep-partner.webp', title: 'Pleep — официальный партнёр' },
+        { image: '/certificates/bitrix24-crm.webp', title: 'Битрикс24.CRM — Едил Турекулов' },
+        { image: '/certificates/bitrix24-base-course.webp', title: 'Базовый курс партнёра Битрикс24 — Едил Турекулов' },
+        { image: '/certificates/bitrix24-lead-app.webp', title: 'Приложение с заявками от клиентов — Едил Турекулов' },
+        { image: '/certificates/iiko-specialist.webp', title: 'iiko — сертифицированный специалист' },
+      ],
     },
     office: {
       title: 'Офис',

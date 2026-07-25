@@ -2,12 +2,14 @@ import { useSettings } from '../context/SettingsContext';
 import SEO from '../components/ui/SEO';
 import Breadcrumbs from '../components/layout/Breadcrumbs';
 import { DotsField } from '../components/ui/Decor';
+import CertificateGallery from '../components/ui/CertificateGallery';
 
 export default function About() {
   const { pages } = useSettings();
   const block = pages.about || {};
   const members = block.team?.members || [];
   const partners = block.partners?.items || [];
+  const certificates = block.partners?.certificates || [];
 
   return (
     <>
@@ -55,17 +57,24 @@ export default function About() {
             </section>
           )}
 
-          {partners.length > 0 && (
+          {(partners.length > 0 || certificates.length > 0) && (
             <section className="mb-16">
               <p className="eyebrow mb-4">Партнёрство</p>
               <h2 className="heading-2 mb-8">{block.partners?.title}</h2>
-              <div className="flex flex-wrap gap-3">
-                {partners.map((p) => (
-                  <span key={p} className="font-tech text-[10px] tracking-[.15em] uppercase border border-paper-line2 dark:border-white/15 rounded-xl px-5 py-3.5 text-tx2 dark:text-tx-inv2">
-                    {p}
-                  </span>
-                ))}
-              </div>
+              {partners.length > 0 && (
+                <div className="flex flex-wrap gap-3">
+                  {partners.map((p) => (
+                    <span key={p} className="font-tech text-[10px] tracking-[.15em] uppercase border border-paper-line2 dark:border-white/15 rounded-xl px-5 py-3.5 text-tx2 dark:text-tx-inv2">
+                      {p}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {certificates.length > 0 && (
+                <div className={partners.length > 0 ? 'mt-10' : ''}>
+                  <CertificateGallery items={certificates} />
+                </div>
+              )}
             </section>
           )}
 
