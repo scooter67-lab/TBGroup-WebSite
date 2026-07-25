@@ -21,7 +21,18 @@ export default function About() {
           <section className="mb-16 grid lg:grid-cols-[1fr_auto] gap-10">
             <div className="max-w-3xl">
               <h2 className="heading-2 mb-5">{block.history?.title}</h2>
-              <p className="text-tx2 dark:text-tx-inv2 leading-relaxed text-[16px]">{block.history?.text}</p>
+              {/* Абзацы разделяются пустой строкой — в админке это одно многострочное поле */}
+              {(block.history?.text || '')
+                .split(/\n\s*\n/)
+                .filter(Boolean)
+                .map((p, i, arr) => (
+                  <p
+                    key={i}
+                    className={`text-tx2 dark:text-tx-inv2 leading-relaxed text-[16px] ${i < arr.length - 1 ? 'mb-4' : ''}`}
+                  >
+                    {p}
+                  </p>
+                ))}
             </div>
             <div className="hidden lg:block w-px self-stretch bg-g2 opacity-40" aria-hidden="true" />
           </section>
