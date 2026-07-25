@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { getDeal, findRecurringByBaseId, addRecurringDeal } from '../services/bitrix24.service.js';
 
 // Сценарий автопродления лицензий.
@@ -7,6 +8,13 @@ const RENEWAL_CATEGORY_ID = 32; // воронка «Продление лице�
 const LEAD_DAYS = 15; // за сколько дней до конца лицензии заводить продление
 // Пользовательское поле сделки с датой окончания лицензии (напр. UF_CRM_LICENSE_END).
 const LICENSE_END_FIELD = process.env.BITRIX24_LICENSE_END_FIELD;
+
+/** Сравнение секрета за постоянное время — без утечки длины совпавшего префикса. */
+const secretMatches = (candidate, expected) => {
+  const a = Buffer.from(String(candidate ?? ''));
+  const b = Buffer.from(expected);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+};
 
 /**
  * START_DATE первой сделки-продления: дата окончания лицензии − срок предупреждения.
@@ -27,7 +35,13 @@ const computeStartDate = (licenseEnd) => {
  */
 export const handleDealEvent = async (req, res) => {
   const secret = process.env.BITRIX24_EVENT_TOKEN;
-  if (secret && req.query.s !== secret) {
+  // Без секрета эндпоинт закрыт: он исключён из rate-limit и ходит в боевую CRM,
+  // поэтому потеря переменной не должна молча открывать его всему интернету.
+  if (!secret) {
+    console.error('[Bitrix event] BITRIX24_EVENT_TOKEN не задан — запрос отклонён');
+    return res.status(503).json({ ok: false });
+  }
+  if (!secretMatches(req.query.s, secret)) {
     return res.status(403).json({ ok: false });
   }
 

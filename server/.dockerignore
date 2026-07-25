@@ -1,0 +1,14 @@
+# Секреты не должны попадать в слои образа: образы уходят в GHCR.
+.env
+.env.*
+!.env.example
+
+node_modules
+npm-debug.log*
+*.log
+
+# Загрузки живут в томе uploads_data, в образе им делать нечего.
+uploads
+
+.git
+.gitignore

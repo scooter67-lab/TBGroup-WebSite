@@ -24,6 +24,11 @@ export const getAllSettings = async (_req, res) => {
 
 export const upsertSetting = async (req, res) => {
   const { key, value } = req.body;
+  // Без проверки объект вида {"$ne": null} уходит в фильтр как оператор
+  // и перезаписывает произвольную настройку вместо создания своей.
+  if (typeof key !== 'string' || !/^[a-z][a-zA-Z0-9_]*$/.test(key)) {
+    return res.status(400).json({ message: 'Некорректный ключ настройки' });
+  }
   const setting = await Settings.findOneAndUpdate(
     { key },
     { value },

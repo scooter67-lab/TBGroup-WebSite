@@ -28,6 +28,8 @@ app.set('trust proxy', 1);
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(compression());
+// Секрет вебхука Bitrix приходит в query (?s=...) — в логах ему не место.
+morgan.token('url', (req) => req.originalUrl.replace(/([?&]s=)[^&]*/, '$1***'));
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 app.use(
