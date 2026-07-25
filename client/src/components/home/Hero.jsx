@@ -26,7 +26,7 @@ const defaults = {
 // Кириллица набирается Inter: Michroma — латиница-only, русские буквы в ней
 // разъезжаются. Латинские лейблы остаются на Michroma (font-tech).
 const chipCls =
-  'text-[9px] font-semibold tracking-[.16em] uppercase text-tx-inv2 border border-white/10 rounded-lg px-3 py-2';
+  'text-[10px] font-semibold tracking-[.16em] uppercase text-tx-inv2 border border-white/10 rounded-lg px-3 py-2';
 
 function BannerLink({ href, className, children }) {
   const external = href.startsWith('http');
@@ -243,10 +243,10 @@ export default function Hero() {
                   {secondary.label}
                 </BannerLink>
               </div>
-              <div className="flex flex-wrap gap-2.5 mt-11">
+              <div className="flex flex-wrap gap-3 mt-12">
                 <span className={chipCls}>Междунар. партнёр</span>
                 <span className={chipCls}>Битрикс24 партнёр</span>
-                <span className={`${chipCls} font-tech !font-normal text-[8.5px]`}>Since 2017 · KZ</span>
+                <span className={`${chipCls} font-tech !font-normal !text-[10px]`}>Since 2017 · KZ</span>
               </div>
             </motion.div>
 
@@ -275,13 +275,13 @@ export default function Hero() {
           ].map((s, i) => (
             <div
               key={s.label}
-              className={`py-5 md:py-6 px-4 md:px-8 border-white/10 ${i > 0 ? 'md:border-l' : ''} ${i % 2 === 1 ? 'border-l md:border-l' : ''}`}
+              className={`py-6 md:py-8 px-4 md:px-8 border-white/10 ${i > 0 ? 'md:border-l' : ''} ${i % 2 === 1 ? 'border-l md:border-l' : ''}`}
             >
-              <div className="font-tech text-xl md:text-[26px] tabular-nums">
+              <div className="stat-value">
                 <Counter to={s.value} />
                 {s.suffix}
               </div>
-              <div className="text-[12.5px] text-tx-inv2 mt-1">{s.label}</div>
+              <div className="stat-label !text-tx-inv2">{s.label}</div>
             </div>
           ))}
         </div>

@@ -28,7 +28,7 @@ export default function ServicesGrid() {
 
   return (
     <Section id="services" subtitle={block?.subtitle} title={block?.title} tone="alt">
-      <div className="grid md:grid-cols-3 gap-5">
+      <div className="grid md:grid-cols-3 gap-6">
         {services.map((s, i) => (
           <motion.div
             key={s._id}
@@ -37,10 +37,10 @@ export default function ServicesGrid() {
             viewport={{ once: true, amount: 0.2 }}
             transition={{ delay: i * 0.06, duration: 0.5, ease: [0.22, 0.61, 0.36, 1] }}
           >
-            <Link to={`/services/${s.slug}`} className="card-tb card-tb-hover flex flex-col gap-3 p-7 h-full group">
-              <BrandIcon name={emojiToIcon[s.icon] || 'cloud'} size={42} strokeWidth={1.6} />
-              <h3 className="text-lg font-bold mt-1">{s.title}</h3>
-              <p className="text-sm text-tx2 dark:text-tx-inv2">{s.shortDescription}</p>
+            <Link to={`/services/${s.slug}`} className="card-tb card-tb-hover flex flex-col gap-3 p-8 h-full group">
+              <BrandIcon name={emojiToIcon[s.icon] || 'cloud'} size={40} strokeWidth={1.6} />
+              <h3 className="card-title mt-2">{s.title}</h3>
+              <p className="text-body-sm">{s.shortDescription}</p>
               <span className="mt-auto pt-2 font-semibold text-sm bg-g1 bg-clip-text text-transparent">
                 Подробнее →
               </span>

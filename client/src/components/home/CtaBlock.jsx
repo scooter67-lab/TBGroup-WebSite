@@ -19,17 +19,14 @@ export default function CtaBlock() {
       <div className="container-tb">
         <div className="panel-ink">
           <DotsField className="absolute inset-0 pointer-events-none" opacity={0.35} />
-          <div className="relative grid lg:grid-cols-2 gap-10 p-7 md:p-12 xl:p-16 items-center">
+          <div className="relative grid lg:grid-cols-2 gap-10 p-8 md:p-12 xl:p-16 items-center">
             <div>
-              <p className="font-tech text-[10px] tracking-[.22em] uppercase text-tx-inv2 flex items-center gap-3 mb-5">
-                <span className="w-7 h-0.5 bg-g1 rounded-full flex-none" aria-hidden="true" />
-                Ваш бизнес. Наша система. Ваш успех.
-              </p>
-              <h2 className="heading-2 text-tx-inv mb-4">{title}</h2>
-              <p className="text-tx-inv2 max-w-lg">{subtitle}</p>
+              <p className="eyebrow !text-tx-inv2 mb-5">Ваш бизнес. Наша система. Ваш успех.</p>
+              <h2 className="heading-2 text-tx-inv mb-5">{title}</h2>
+              <p className="text-body !text-tx-inv2 max-w-lg">{subtitle}</p>
             </div>
             <div className="card-tb !bg-ink-3 !border-white/10 p-6 md:p-8">
-              <h3 className="font-bold text-lg mb-5 text-tx-inv">Быстрая заявка</h3>
+              <h3 className="card-title mb-6 text-tx-inv">Быстрая заявка</h3>
               <ContactForm compact onInk />
             </div>
           </div>

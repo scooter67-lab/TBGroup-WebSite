@@ -36,22 +36,22 @@ export default function Reviews() {
       <section className="section-pad">
         <div className="container-tb">
           <Breadcrumbs items={[{ label: 'Отзывы' }]} />
-          <p className="eyebrow mb-4">Нам доверяют</p>
-          <h1 className="heading-1 mb-10">Отзывы клиентов</h1>
+          <p className="eyebrow mb-5">Нам доверяют</p>
+          <h1 className="heading-1 mb-16">Отзывы клиентов</h1>
 
           <div className="grid lg:grid-cols-[1fr_400px] gap-10 items-start">
             <div>
               {isEmpty ? (
                 <div className="text-center border-[1.5px] border-dashed border-paper-line2 dark:border-white/15 rounded-2xl px-8 py-14">
-                  <PixelCluster size={52} className="mx-auto mb-5" />
+                  <PixelCluster size={48} className="mx-auto mb-5" />
                   <h2 className="font-bold text-lg mb-2">Отзывы скоро появятся</h2>
-                  <p className="text-sm text-tx2 dark:text-tx-inv2 max-w-sm mx-auto">
+                  <p className="text-body-sm max-w-sm mx-auto">
                     Мы собираем отклики клиентов. Работали с нами? Поделитесь опытом в форме
                     справа — это займёт две минуты.
                   </p>
                 </div>
               ) : (
-                <div className="grid sm:grid-cols-2 gap-5">
+                <div className="grid sm:grid-cols-2 gap-6">
                   {videoReviews.map((r) => (
                     <div key={r._id} className="card-tb p-4 sm:col-span-2">
                       <VideoEmbed url={r.videoUrl} type={r.type === 'mp4' ? 'mp4' : 'youtube'} />
@@ -71,7 +71,7 @@ export default function Reviews() {
               )}
             </div>
 
-            <div className="card-tb p-7 lg:sticky lg:top-24">
+            <div className="card-tb p-8 lg:sticky lg:top-24">
               <h2 className="text-lg font-bold mb-5">Оставить отзыв</h2>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <input {...register('author', { required: true })} placeholder="Ваше имя" className="input-tb" />

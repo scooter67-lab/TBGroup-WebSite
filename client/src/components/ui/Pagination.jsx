@@ -1,5 +1,5 @@
 const btnBase =
-  'w-10 h-10 inline-flex items-center justify-center rounded-xl border text-sm font-semibold transition-colors ' +
+  'w-10 h-10 inline-flex items-center justify-center rounded-xl border text-sm font-semibold transition-colors duration-250 ' +
   'border-paper-line2 text-tx2 hover:border-brand-magenta hover:text-tx ' +
   'dark:border-white/15 dark:text-tx-inv2 dark:hover:border-brand-magenta dark:hover:text-tx-inv ' +
   'disabled:opacity-40 disabled:pointer-events-none';

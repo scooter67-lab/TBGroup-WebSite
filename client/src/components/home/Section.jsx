@@ -16,14 +16,18 @@ export function Section({ id, title, subtitle, children, className = '', tone = 
   return (
     <section id={id} className={`section-pad ${bg} ${className}`}>
       <div className="container-tb">
+        {/* Прозрачность держим на 1: страницы пререндерятся, и при initial
+            opacity 0 контент уехал бы в HTML невидимым. Появление даёт
+            сдвиг по вертикали. */}
         {(title || subtitle) && (
           <motion.div
-            initial={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 1, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mb-10 md:mb-14"
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.5, ease: [0.22, 0.61, 0.36, 1] }}
+            className="max-w-3xl section-head"
           >
-            {subtitle && <p className={`eyebrow mb-4 ${t === 'ink' ? '!text-tx-inv3' : ''}`}>{subtitle}</p>}
+            {subtitle && <p className={`eyebrow mb-5 ${t === 'ink' ? '!text-tx-inv3' : ''}`}>{subtitle}</p>}
             {title && <h2 className="heading-2">{title}</h2>}
           </motion.div>
         )}

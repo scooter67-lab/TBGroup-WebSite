@@ -44,8 +44,8 @@ export default function Cases() {
       <section className="section-pad">
         <div className="container-tb">
           <Breadcrumbs items={[{ label: 'Кейсы' }]} />
-          <p className="eyebrow mb-4">Результаты</p>
-          <h1 className="heading-1 mb-10">Кейсы</h1>
+          <p className="eyebrow mb-5">Результаты</p>
+          <h1 className="heading-1 mb-16">Кейсы</h1>
 
           {showFilters && (
             <div className="flex flex-col md:flex-row gap-4 mb-8">
@@ -76,16 +76,16 @@ export default function Cases() {
           )}
 
           {loading ? (
-            <div className="grid md:grid-cols-3 gap-5">
+            <div className="grid md:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map((n) => (
                 <CardSkeleton key={n} />
               ))}
             </div>
           ) : cases.length === 0 ? (
             <div className="max-w-lg mx-auto text-center border-[1.5px] border-dashed border-paper-line2 dark:border-white/15 rounded-2xl px-8 py-14 my-8">
-              <PixelCluster size={52} className="mx-auto mb-5" />
+              <PixelCluster size={48} className="mx-auto mb-6" />
               <h2 className="font-bold text-lg mb-2">Кейсы готовятся к публикации</h2>
-              <p className="text-sm text-tx2 dark:text-tx-inv2 mb-6">
+              <p className="text-body-sm mb-6">
                 Мы описываем завершённые проекты внедрения. А пока — расскажите о своей задаче,
                 и мы покажем похожие решения на консультации.
               </p>
@@ -93,20 +93,20 @@ export default function Cases() {
             </div>
           ) : (
             <>
-              <div className={`grid gap-5 ${paginated.length === 1 ? 'md:grid-cols-2' : 'md:grid-cols-3'}`}>
+              <div className={`grid gap-6 ${paginated.length === 1 ? 'md:grid-cols-2' : 'md:grid-cols-3'}`}>
                 {paginated.map((c, i) => (
                   <motion.div
                     key={c._id}
                     initial={{ opacity: 1, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05, duration: 0.45, ease: [0.22, 0.61, 0.36, 1] }}
+                    transition={{ delay: i * 0.06, duration: 0.5, ease: [0.22, 0.61, 0.36, 1] }}
                   >
-                    <Link to={`/cases/${c.slug}`} className="card-tb card-tb-hover block p-7 h-full">
-                      <span className="font-tech text-[9px] tracking-[.15em] uppercase text-tx3 dark:text-tx-inv3">
+                    <Link to={`/cases/${c.slug}`} className="card-tb card-tb-hover block p-8 h-full">
+                      <span className="font-tech text-[10px] tracking-[.15em] uppercase text-tx3 dark:text-tx-inv3">
                         {c.client}
                       </span>
                       <h2 className="text-lg font-bold mt-3 mb-2">{c.title}</h2>
-                      <p className="text-sm text-tx2 dark:text-tx-inv2 line-clamp-2">{c.task}</p>
+                      <p className="text-body-sm line-clamp-2">{c.task}</p>
                       {c.metrics?.[0] && (
                         <p className="mt-5 font-tech text-2xl bg-g1 bg-clip-text text-transparent">
                           {c.metrics[0].value}

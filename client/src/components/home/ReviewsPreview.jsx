@@ -32,7 +32,7 @@ export default function ReviewsPreview() {
 
   return (
     <Section id="reviews" subtitle={block?.subtitle} title={block?.title} tone="alt">
-      <div className="grid md:grid-cols-3 gap-5">
+      <div className="grid md:grid-cols-3 gap-6">
         {reviews.map((r, i) => (
           <motion.div
             key={r._id}

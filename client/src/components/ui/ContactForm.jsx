@@ -35,11 +35,11 @@ export default function ContactForm({ service = '', compact = false, onInk = fal
   };
 
   const inputCls = `input-tb ${onInk ? '!bg-ink-4 !border-white/15 !text-tx-inv placeholder:!text-tx-inv3' : ''}`;
-  const labelCls = `block text-[13px] font-semibold mb-1.5 ${onInk ? 'text-tx-inv' : ''}`;
+  const labelCls = `field-label ${onInk ? 'text-tx-inv' : ''}`;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-      <div className={compact ? 'grid grid-cols-1 md:grid-cols-2 gap-4' : 'space-y-4'}>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
+      <div className={compact ? 'grid grid-cols-1 md:grid-cols-2 gap-6' : 'space-y-5'}>
         <div>
           <label className={labelCls}>Имя</label>
           <input
@@ -48,7 +48,7 @@ export default function ContactForm({ service = '', compact = false, onInk = fal
             placeholder="Как к вам обращаться"
             autoComplete="name"
           />
-          {errors.name && <p className="text-[#E5484D] text-[12.5px] mt-1.5">{errors.name.message}</p>}
+          {errors.name && <p className="field-error">{errors.name.message}</p>}
         </div>
         <div>
           <label className={labelCls}>Телефон</label>
@@ -62,7 +62,7 @@ export default function ContactForm({ service = '', compact = false, onInk = fal
             type="tel"
             autoComplete="tel"
           />
-          {errors.phone && <p className="text-[#E5484D] text-[12.5px] mt-1.5">{errors.phone.message}</p>}
+          {errors.phone && <p className="field-error">{errors.phone.message}</p>}
         </div>
       </div>
       <button type="submit" disabled={isSubmitting} className="btn-primary w-full md:w-auto">

@@ -119,12 +119,12 @@ export default function ServicePage() {
       {content?.advantages?.length > 0 ? (
         <section className="section-pad bg-paper-2 dark:bg-ink-2">
           <div className="container-tb">
-            <p className="eyebrow mb-4">Преимущества</p>
-            <h2 className="heading-2 mb-10 max-w-3xl">{content.advantagesTitle}</h2>
+            <p className="eyebrow mb-5">Преимущества</p>
+            <h2 className="heading-2 mb-8 max-w-3xl">{content.advantagesTitle}</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {content.advantages.map((adv) => (
                 <div key={adv} className="flex gap-3 items-start card-tb p-4">
-                  <BrandIcon name="check" size={22} strokeWidth={1.8} className="flex-shrink-0 mt-0.5" />
+                  <BrandIcon name="check" size={24} strokeWidth={1.8} className="flex-shrink-0 mt-0.5" />
                   <span className="text-sm font-medium">{adv}</span>
                 </div>
               ))}
@@ -134,14 +134,14 @@ export default function ServicePage() {
       ) : (
         <section className="section-pad bg-paper-2 dark:bg-ink-2">
           <div className="container-tb">
-            <p className="eyebrow mb-4">Преимущества</p>
-            <h2 className="heading-2 mb-10">Что вы получите</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <p className="eyebrow mb-5">Преимущества</p>
+            <h2 className="heading-2 mb-8">Что вы получите</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {(shown.benefits || []).map((b, i) => (
                 <div key={b.title} className="card-tb p-6">
-                  <span className="font-tech text-[11px] text-tx3 dark:text-tx-inv3">{String(i + 1).padStart(2, '0')}</span>
-                  <h3 className="font-bold mt-3 mb-1.5">{b.title}</h3>
-                  <p className="text-sm text-tx2 dark:text-tx-inv2">{b.description}</p>
+                  <span className="font-tech text-[12px] text-tx3 dark:text-tx-inv3">{String(i + 1).padStart(2, '0')}</span>
+                  <h3 className="card-title mt-4 mb-2">{b.title}</h3>
+                  <p className="text-body-sm">{b.description}</p>
                 </div>
               ))}
             </div>
@@ -152,16 +152,16 @@ export default function ServicePage() {
       {content && (
         <section className="section-pad">
           <div className="container-tb">
-            <p className="eyebrow mb-4">Платформа</p>
-            <h2 className="heading-2 mb-10">Возможности платформы</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <p className="eyebrow mb-5">Платформа</p>
+            <h2 className="heading-2 mb-8">Возможности платформы</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {content.capabilities.map((cap) => (
                 <div key={cap.title} className="card-tb p-6 flex flex-col">
-                  <BrandIcon name={emojiToIcon[cap.icon] || 'gear'} size={34} strokeWidth={1.7} className="mb-4" />
-                  <h3 className="font-bold mb-3">{cap.title}</h3>
+                  <BrandIcon name={emojiToIcon[cap.icon] || 'gear'} size={32} strokeWidth={1.7} className="mb-4" />
+                  <h3 className="card-title mb-3">{cap.title}</h3>
                   <ul className="space-y-2">
                     {cap.items.map((item) => (
-                      <li key={item} className="flex gap-2.5 text-sm text-tx2 dark:text-tx-inv2">
+                      <li key={item} className="flex gap-3 text-body-sm">
                         <span className="w-1.5 h-1.5 rounded-[2px] bg-g1 flex-shrink-0 mt-[7px]" aria-hidden="true" />
                         <span>{item}</span>
                       </li>
@@ -183,19 +183,19 @@ export default function ServicePage() {
       {shown.steps?.length > 0 && (
         <section className="section-pad bg-paper-2 dark:bg-ink-2">
           <div className="container-tb">
-            <p className="eyebrow mb-4">Процесс</p>
-            <h2 className="heading-2 mb-10">Этапы внедрения</h2>
+            <p className="eyebrow mb-5">Процесс</p>
+            <h2 className="heading-2 mb-8">Этапы внедрения</h2>
             <div className="relative max-w-2xl">
               <span className="absolute left-[19px] top-2 bottom-2 w-px bg-g2 opacity-40" aria-hidden="true" />
               <div className="space-y-6">
                 {shown.steps.map((step, i) => (
-                  <div key={step.title} className="relative flex gap-5 pl-0">
+                  <div key={step.title} className="relative flex gap-6 pl-0">
                     <span className="relative z-10 flex-shrink-0 w-10 h-10 rounded-xl bg-g1 text-white flex items-center justify-center font-tech text-[13px]">
                       {i + 1}
                     </span>
                     <div className="pt-1.5">
-                      <h3 className="font-bold">{step.title}</h3>
-                      <p className="text-sm text-tx2 dark:text-tx-inv2 mt-1">{step.description}</p>
+                      <h3 className="card-title">{step.title}</h3>
+                      <p className="text-body-sm mt-1">{step.description}</p>
                     </div>
                   </div>
                 ))}
@@ -208,14 +208,14 @@ export default function ServicePage() {
       {shown.faq?.length > 0 && (
         <section className="section-pad">
           <div className="container-tb max-w-3xl">
-            <p className="eyebrow mb-4">FAQ</p>
-            <h2 className="heading-2 mb-10">Частые вопросы</h2>
+            <p className="eyebrow mb-5">FAQ</p>
+            <h2 className="heading-2 mb-8">Частые вопросы</h2>
             <div className="space-y-3">
               {shown.faq.map((item) => (
                 <details key={item.question} className="card-tb !overflow-visible p-5 group">
                   <summary className="font-semibold cursor-pointer list-none flex justify-between items-center gap-4 [&::-webkit-details-marker]:hidden">
                     {item.question}
-                    <span className="w-6 h-6 flex-none rounded-lg border-[1.5px] border-paper-line2 dark:border-white/15 relative transition-transform duration-200 group-open:rotate-45" aria-hidden="true">
+                    <span className="w-6 h-6 flex-none rounded-lg border-[1.5px] border-paper-line2 dark:border-white/15 relative transition-transform duration-250 ease-brand group-open:rotate-45" aria-hidden="true">
                       <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-[1.5px] bg-tx2 dark:bg-tx-inv2" />
                       <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-2.5 w-[1.5px] bg-tx2 dark:bg-tx-inv2" />
                     </span>
@@ -231,18 +231,18 @@ export default function ServicePage() {
       <section className="section-pad bg-paper-2 dark:bg-ink-2">
         <div className="container-tb grid lg:grid-cols-2 gap-10">
           <div>
-            <p className="eyebrow mb-4">Заявка</p>
+            <p className="eyebrow mb-5">Заявка</p>
             <h2 className="heading-2 mb-3">Оставить заявку</h2>
             <p className="text-tx2 dark:text-tx-inv2 mb-7">Оставьте контакты — перезвоним и обсудим задачу</p>
             <ContactForm service={shown.title} />
           </div>
           <div className="space-y-6">
             <div className="card-tb p-6 space-y-5">
-              <h3 className="font-bold text-lg">Контакты</h3>
+              <h3 className="card-title">Контакты</h3>
               {contacts.phone && (
                 <div>
                   <p className="label-tech mb-1">Телефон</p>
-                  <a href={`tel:${contacts.phone}`} className="text-lg font-semibold hover:text-brand-magenta transition-colors">
+                  <a href={`tel:${contacts.phone}`} className="text-lg font-semibold hover:text-brand-magenta transition-colors duration-250">
                     {contacts.phone}
                   </a>
                 </div>
@@ -250,7 +250,7 @@ export default function ServicePage() {
               {contacts.email && (
                 <div>
                   <p className="label-tech mb-1">Email</p>
-                  <a href={`mailto:${contacts.email}`} className="text-lg font-semibold hover:text-brand-magenta transition-colors break-all">
+                  <a href={`mailto:${contacts.email}`} className="text-lg font-semibold hover:text-brand-magenta transition-colors duration-250 break-all">
                     {contacts.email}
                   </a>
                 </div>
@@ -264,12 +264,12 @@ export default function ServicePage() {
               {(contacts.telegram || contacts.whatsapp) && (
                 <div className="flex gap-3 pt-1">
                   {contacts.telegram && (
-                    <a href={contacts.telegram} target="_blank" rel="noreferrer" className="btn-secondary py-2.5 px-5 text-sm">
+                    <a href={contacts.telegram} target="_blank" rel="noreferrer" className="btn-secondary btn-sm">
                       Telegram
                     </a>
                   )}
                   {contacts.whatsapp && (
-                    <a href={contacts.whatsapp} target="_blank" rel="noreferrer" className="btn-primary py-2.5 px-5 text-sm">
+                    <a href={contacts.whatsapp} target="_blank" rel="noreferrer" className="btn-primary btn-sm">
                       WhatsApp
                     </a>
                   )}

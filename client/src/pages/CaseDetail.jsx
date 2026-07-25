@@ -74,7 +74,7 @@ export default function CaseDetail() {
           {['task', 'solution', 'result'].map((key) => (
             caseItem[key] && (
               <section key={key} className="mb-10">
-                <p className="eyebrow mb-3">{sectionTitles[key]}</p>
+                <p className="eyebrow mb-5">{sectionTitles[key]}</p>
                 <p className="text-tx2 dark:text-tx-inv2 leading-relaxed whitespace-pre-line">{caseItem[key]}</p>
               </section>
             )

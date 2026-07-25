@@ -25,13 +25,13 @@ export default function CasesPreview() {
   return (
     <Section id="cases" subtitle={block?.subtitle} title={block?.title} tone="ink">
       {loading ? (
-        <div className="grid md:grid-cols-3 gap-5">
+        <div className="grid md:grid-cols-3 gap-6">
           {[1, 2, 3].map((n) => (
             <CardSkeleton key={n} />
           ))}
         </div>
       ) : (
-        <div className={`grid gap-5 ${cases.length === 1 ? 'md:grid-cols-2' : 'md:grid-cols-3'}`}>
+        <div className={`grid gap-6 ${cases.length === 1 ? 'md:grid-cols-2' : 'md:grid-cols-3'}`}>
           {cases.map((c, i) => (
             <motion.div
               key={c._id}
@@ -42,12 +42,12 @@ export default function CasesPreview() {
             >
               <Link
                 to={`/cases/${c.slug}`}
-                className="card-tb card-tb-hover !bg-ink-4 !border-white/10 hover:!border-white/20 block p-7 h-full"
+                className="card-tb card-tb-hover !bg-ink-4 !border-white/10 hover:!border-white/20 block p-8 h-full"
               >
-                <span className="font-tech text-[9px] tracking-[.15em] uppercase text-tx-inv3">
+                <span className="font-tech text-[10px] tracking-[.15em] uppercase text-tx-inv3">
                   {c.client}{c.industry ? ` · ${c.industry}` : ''}
                 </span>
-                <h3 className="text-lg font-bold mt-3 mb-2 text-tx-inv">{c.title}</h3>
+                <h3 className="card-title mt-4 mb-2 text-tx-inv">{c.title}</h3>
                 <p className="text-sm text-tx-inv2 line-clamp-2">{c.result}</p>
                 {c.metrics?.[0] && (
                   <p className="mt-5 font-tech text-2xl bg-g1 bg-clip-text text-transparent">

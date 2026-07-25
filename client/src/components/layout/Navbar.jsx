@@ -37,14 +37,14 @@ function MoonIcon() {
 
 function ChevronIcon({ open }) {
   return (
-    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={`transition-transform duration-250 ease-brand ${open ? 'rotate-180' : ''}`}>
       <path d="m6 9 6 6 6-6" />
     </svg>
   );
 }
 
 const navLinkCls = ({ isActive }) =>
-  `relative text-sm font-medium py-1.5 transition-colors ${
+  `relative text-sm font-medium py-1.5 transition-colors duration-250 ${
     isActive
       ? 'text-tx dark:text-tx-inv after:absolute after:left-0 after:right-0 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-g1'
       : 'text-tx2 dark:text-tx-inv2 hover:text-tx dark:hover:text-tx-inv'
@@ -100,7 +100,7 @@ export default function Navbar() {
                         to={l.to}
                         onClick={() => setServicesOpen(false)}
                         className={({ isActive }) =>
-                          `block rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                          `block rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-250 ${
                             isActive
                               ? 'bg-paper-2 text-tx dark:bg-ink-3 dark:text-tx-inv'
                               : 'text-tx2 hover:bg-paper-2 hover:text-tx dark:text-tx-inv2 dark:hover:bg-ink-3 dark:hover:text-tx-inv'
@@ -123,16 +123,16 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={toggle}
-            className="p-2.5 rounded-xl text-tx2 hover:bg-paper-2 dark:text-tx-inv2 dark:hover:bg-ink-3 transition-colors"
+            className="p-2.5 rounded-xl text-tx2 hover:bg-paper-2 dark:text-tx-inv2 dark:hover:bg-ink-3 transition-colors duration-250"
             aria-label={dark ? 'Светлая тема' : 'Тёмная тема'}
           >
             {dark ? <SunIcon /> : <MoonIcon />}
           </button>
-          <Link to="/contacts" className="hidden sm:inline-flex btn-primary text-sm py-2.5 px-5">
+          <Link to="/contacts" className="hidden sm:inline-flex btn-primary btn-sm">
             Оставить заявку
           </Link>
           <button
@@ -162,7 +162,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
-                className="flex items-center justify-between py-2.5 px-2 rounded-lg font-medium text-tx2 dark:text-tx-inv2 hover:bg-paper-2 dark:hover:bg-ink-3"
+                className="flex items-center justify-between py-3 px-3 rounded-lg font-medium text-tx2 dark:text-tx-inv2 hover:bg-paper-2 dark:hover:bg-ink-3"
                 aria-expanded={mobileServicesOpen}
               >
                 Услуги
@@ -175,7 +175,7 @@ export default function Navbar() {
                       key={l.to}
                       to={l.to}
                       onClick={() => setOpen(false)}
-                      className="py-2.5 px-2 rounded-lg font-medium text-tx2 dark:text-tx-inv2 hover:bg-paper-2 dark:hover:bg-ink-3"
+                      className="py-3 px-3 rounded-lg font-medium text-tx2 dark:text-tx-inv2 hover:bg-paper-2 dark:hover:bg-ink-3"
                     >
                       {l.label}
                     </NavLink>
@@ -187,7 +187,7 @@ export default function Navbar() {
                   key={l.to}
                   to={l.to}
                   onClick={() => setOpen(false)}
-                  className="py-2.5 px-2 rounded-lg font-medium text-tx2 dark:text-tx-inv2 hover:bg-paper-2 dark:hover:bg-ink-3"
+                  className="py-3 px-3 rounded-lg font-medium text-tx2 dark:text-tx-inv2 hover:bg-paper-2 dark:hover:bg-ink-3"
                 >
                   {l.label}
                 </NavLink>

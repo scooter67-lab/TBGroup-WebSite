@@ -52,6 +52,16 @@ export default {
       },
       transitionTimingFunction: {
         brand: 'cubic-bezier(.22,.61,.36,1)',
+        // Кривая бренда по умолчанию: иначе часть переходов идёт на
+        // стандартной кривой Tailwind и ощущается чужеродно.
+        DEFAULT: 'cubic-bezier(.22,.61,.36,1)',
+      },
+      // Единый темп интерфейса: 250мс на состояния, 400мс на появление блоков.
+      // DEFAULT перекрывает стандартные 150мс у голых transition-*.
+      transitionDuration: {
+        DEFAULT: '250ms',
+        250: '250ms',
+        400: '400ms',
       },
       keyframes: {
         dashflow: { to: { strokeDashoffset: '-96' } },

@@ -16,7 +16,7 @@ export default function ImageGallery({ images = [] }) {
             onClick={() => setActive(img)}
             className="rounded-xl overflow-hidden aspect-video focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-magenta"
           >
-            <img src={img} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform" loading="lazy" />
+            <img src={img} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-250 ease-brand" loading="lazy" />
           </button>
         ))}
       </div>

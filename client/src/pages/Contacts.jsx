@@ -14,31 +14,31 @@ export default function Contacts() {
       <section className="section-pad">
         <div className="container-tb">
           <Breadcrumbs items={[{ label: 'Контакты' }]} />
-          <p className="eyebrow mb-4">Связаться с нами</p>
-          <h1 className="heading-1 mb-12">Контакты</h1>
+          <p className="eyebrow mb-5">Связаться с нами</p>
+          <h1 className="heading-1 mb-16">Контакты</h1>
 
           <div className="grid lg:grid-cols-2 gap-12">
             <div>
-              <div className="grid sm:grid-cols-2 gap-5 mb-10">
+              <div className="grid sm:grid-cols-2 gap-6 mb-10">
                 {c.phone && (
                   <div className="stat-tb">
-                    <p className="label-tech mb-1.5">Телефон</p>
-                    <a href={`tel:${c.phone}`} className="text-lg font-semibold hover:text-brand-magenta transition-colors">
+                    <p className="label-tech mb-2">Телефон</p>
+                    <a href={`tel:${c.phone}`} className="text-lg font-semibold hover:text-brand-magenta transition-colors duration-250">
                       {c.phone}
                     </a>
                   </div>
                 )}
                 {c.email && (
                   <div className="stat-tb">
-                    <p className="label-tech mb-1.5">Email</p>
-                    <a href={`mailto:${c.email}`} className="text-lg font-semibold hover:text-brand-magenta transition-colors break-all">
+                    <p className="label-tech mb-2">Email</p>
+                    <a href={`mailto:${c.email}`} className="text-lg font-semibold hover:text-brand-magenta transition-colors duration-250 break-all">
                       {c.email}
                     </a>
                   </div>
                 )}
                 {c.address && (
                   <div className="stat-tb sm:col-span-2">
-                    <p className="label-tech mb-1.5">Адрес</p>
+                    <p className="label-tech mb-2">Адрес</p>
                     <p className="text-base">{c.address}</p>
                   </div>
                 )}
@@ -46,12 +46,12 @@ export default function Contacts() {
               {(c.telegram || c.whatsapp) && (
                 <div className="flex gap-3 mb-10">
                   {c.telegram && (
-                    <a href={c.telegram} target="_blank" rel="noreferrer" className="btn-secondary py-2.5 px-5 text-sm">
+                    <a href={c.telegram} target="_blank" rel="noreferrer" className="btn-secondary btn-sm">
                       Telegram
                     </a>
                   )}
                   {c.whatsapp && (
-                    <a href={c.whatsapp} target="_blank" rel="noreferrer" className="btn-primary py-2.5 px-5 text-sm">
+                    <a href={c.whatsapp} target="_blank" rel="noreferrer" className="btn-primary btn-sm">
                       WhatsApp
                     </a>
                   )}

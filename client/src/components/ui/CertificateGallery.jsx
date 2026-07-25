@@ -26,7 +26,7 @@ export default function CertificateGallery({ items = [] }) {
                 src={cert.image}
                 alt={cert.title}
                 loading="lazy"
-                className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform"
+                className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-250 ease-brand"
               />
             </div>
             <p className="mt-3 text-xs leading-snug text-tx2 dark:text-tx-inv2">{cert.title}</p>
