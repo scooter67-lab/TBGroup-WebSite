@@ -73,7 +73,7 @@ export default function About() {
             <p className="eyebrow mb-4">Офис · Алматы</p>
             <h2 className="heading-2 mb-8">{block.office?.title}</h2>
             {block.office?.image ? (
-              <img src={block.office.image} alt={block.office.title} className="w-full aspect-video object-cover rounded-3xl" />
+              <img src={block.office.image} alt={block.office.title} className="w-full aspect-video object-cover rounded-3xl" loading="lazy" />
             ) : (
               <div className="relative aspect-[21/9] rounded-3xl bg-ink overflow-hidden flex items-center justify-center">
                 <DotsField className="absolute inset-0" opacity={0.5} />
