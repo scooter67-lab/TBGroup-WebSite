@@ -46,11 +46,23 @@ export default function About() {
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 {members.map((m, i) => (
                   <div key={`${m.name}-${i}`} className="card-tb p-6">
-                    <div className="w-14 h-14 rounded-xl bg-g1 flex items-center justify-center font-tech text-lg text-white mb-4">
-                      {m.name?.[0]}
-                    </div>
+                    {m.photo ? (
+                      <img
+                        src={m.photo}
+                        alt={m.name}
+                        loading="lazy"
+                        className="w-14 h-14 rounded-xl object-cover mb-4"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 rounded-xl bg-g1 flex items-center justify-center font-tech text-lg text-white mb-4">
+                        {m.name?.[0]}
+                      </div>
+                    )}
                     <h3 className="font-bold">{m.name}</h3>
                     <p className="text-sm text-tx2 dark:text-tx-inv2 mt-1">{m.role}</p>
+                    {m.description && (
+                      <p className="text-sm text-tx2 dark:text-tx-inv2 mt-3 leading-relaxed">{m.description}</p>
+                    )}
                   </div>
                 ))}
               </div>

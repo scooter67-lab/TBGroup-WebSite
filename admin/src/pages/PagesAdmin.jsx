@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import api from '../api/axios';
 import { defaultPages } from '../data/defaultPages';
 import { deepMerge } from '../utils/deepMerge';
+import ImageUpload from '../components/ImageUpload';
 
 function Block({ title, hint, children }) {
   return (
@@ -283,47 +284,50 @@ export default function PagesAdmin() {
 
           <Block title="Команда">
             <Field label="Заголовок секции" value={about.team?.title} onChange={(v) => setAbout('team', { ...about.team, title: v })} />
-            {(about.team?.members || []).map((m, i) => (
-              <div key={i} className="flex gap-2 border-t pt-3">
-                <div className="flex-1 grid md:grid-cols-2 gap-2">
-                  <Field
-                    label="Имя"
-                    value={m.name}
-                    onChange={(v) => {
+            {(about.team?.members || []).map((m, i) => {
+              const patch = (fields) => {
+                const members = [...about.team.members];
+                members[i] = { ...members[i], ...fields };
+                setAbout('team', { ...about.team, members });
+              };
+              return (
+                <div key={i} className="flex gap-2 border-t pt-3">
+                  <div className="flex-1 space-y-2">
+                    <div className="grid md:grid-cols-2 gap-2">
+                      <Field label="Имя" value={m.name} onChange={(v) => patch({ name: v })} />
+                      <Field label="Должность" value={m.role} onChange={(v) => patch({ role: v })} />
+                    </div>
+                    <ImageUpload label="Фото" value={m.photo} onChange={(v) => patch({ photo: v })} />
+                    <Field
+                      label="Описание"
+                      value={m.description}
+                      onChange={(v) => patch({ description: v })}
+                      multiline
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
                       const members = [...about.team.members];
-                      members[i] = { ...members[i], name: v };
+                      members.splice(i, 1);
                       setAbout('team', { ...about.team, members });
                     }}
-                  />
-                  <Field
-                    label="Должность"
-                    value={m.role}
-                    onChange={(v) => {
-                      const members = [...about.team.members];
-                      members[i] = { ...members[i], role: v };
-                      setAbout('team', { ...about.team, members });
-                    }}
-                  />
+                    className="text-red-500 text-sm self-start"
+                  >
+                    ✕
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const members = [...about.team.members];
-                    members.splice(i, 1);
-                    setAbout('team', { ...about.team, members });
-                  }}
-                  className="text-red-500 text-sm self-center"
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
+              );
+            })}
             <button
               type="button"
               onClick={() =>
                 setAbout('team', {
                   ...about.team,
-                  members: [...(about.team?.members || []), { name: '', role: '' }],
+                  members: [
+                    ...(about.team?.members || []),
+                    { name: '', role: '', photo: '', description: '' },
+                  ],
                 })
               }
               className="text-sm text-admin-accent"
