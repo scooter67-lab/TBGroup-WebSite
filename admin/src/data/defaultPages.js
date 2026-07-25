@@ -60,7 +60,7 @@ export const defaultPages = {
     },
     partners: {
       title: 'Сертификаты и партнёры',
-      items: ['МойСклад', 'Битрикс24', 'Манго', 'UIS', 'Roistat'],
+      items: [],
       certificates: [
         { image: '/certificates/bitrix24-partner.webp', title: 'Битрикс24 — бизнес-партнёр 1С-Битрикс' },
         { image: '/certificates/moysklad-partner.webp', title: 'МойСклад — официальный партнёр' },
