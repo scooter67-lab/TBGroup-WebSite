@@ -70,6 +70,8 @@ services:
       dockerfile: Dockerfile
       args:
         VITE_API_URL: /api
+        # Хост админки не отдаёт статику сайта — превью картинок берём с сайта.
+        VITE_SITE_URL: https://tbgroup.kz
     container_name: tbgroup-admin
     restart: unless-stopped
     healthcheck:

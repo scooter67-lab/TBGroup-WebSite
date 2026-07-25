@@ -5,6 +5,18 @@ import api from '../api/axios';
 // Что принимает сервер (upload.middleware.js): расширение И mime из белого списка.
 const ACCEPT = '.jpg,.jpeg,.png,.webp,.gif';
 
+// Хост админки отдаёт SPA на любой неизвестный путь, поэтому картинки из
+// статики сайта (/team, /office.webp, /certificates) здесь превращаются
+// в index.html. Показываем их с адреса сайта; /uploads проксируется на оба
+// хоста и работает как есть.
+const SITE_URL = (import.meta.env.VITE_SITE_URL || '').replace(/\/$/, '');
+
+export const previewSrc = (value) => {
+  if (!value) return '';
+  if (/^(https?:)?\/\//.test(value) || value.startsWith('/uploads')) return value;
+  return value.startsWith('/') ? `${SITE_URL}${value}` : value;
+};
+
 /**
  * Загрузка картинки на сервер с превью. Отдаёт наверх путь вида /uploads/<файл>.
  * Content-Type для FormData не ставим — axios сам проставит boundary.
@@ -35,7 +47,7 @@ export default function ImageUpload({ label, value, onChange }) {
       <span className="text-gray-600 mb-1 block">{label}</span>
       <div className="flex items-start gap-3">
         {value ? (
-          <img src={value} alt="" className="w-16 h-16 rounded-lg object-cover border shrink-0" />
+          <img src={previewSrc(value)} alt="" className="w-16 h-16 rounded-lg object-cover border shrink-0" />
         ) : (
           <div className="w-16 h-16 rounded-lg border border-dashed flex items-center justify-center text-gray-400 text-xs shrink-0">
             нет фото
