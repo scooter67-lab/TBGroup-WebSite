@@ -3,6 +3,9 @@ services:
     image: mongo:7
     container_name: tbgroup-mongo
     restart: unless-stopped
+    # Без --auth базу читает без пароля любой процесс на хосте и любой
+    # контейнер в сети tbgroup-net. Учётка приложения — в MONGODB_URI.
+    command: ['mongod', '--auth']
     volumes:
       - mongo_data:/data/db
     # Только localhost хоста (для админ-инструментов), не наружу.
