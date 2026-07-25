@@ -75,7 +75,7 @@ export const defaultPages = {
     },
     office: {
       title: 'Офис',
-      image: '/office.webp',
+      image: '/office-open-space.webp',
       placeholder: 'Фото офиса',
     },
   },
