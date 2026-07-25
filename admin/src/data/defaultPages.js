@@ -55,10 +55,7 @@ export const defaultPages = {
     team: {
       title: 'Команда',
       members: [
-        { name: 'Андрей Смирнов', role: 'CEO, архитектор решений' },
-        { name: 'Елена Волкова', role: 'Руководитель внедрения Битрикс24' },
-        { name: 'Игорь Кузнецов', role: 'Эксперт МойСклад' },
-        { name: 'Ольга Морозова', role: 'Интеграции и телефония' },
+        { name: 'Едил Турекулов', role: 'Фаундер и CEO', photo: '/team/edil-turekulov.webp' },
       ],
     },
     partners: {
