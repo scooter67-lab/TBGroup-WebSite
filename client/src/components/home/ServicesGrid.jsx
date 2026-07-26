@@ -28,6 +28,8 @@ export default function ServicesGrid() {
 
   return (
     <Section id="services" subtitle={block?.subtitle} title={block?.title} tone="alt">
+      {block?.intro && <p className="text-body max-w-3xl -mt-6 mb-10">{block.intro}</p>}
+
       <div className="grid md:grid-cols-3 gap-6">
         {services.map((s, i) => (
           <motion.div
@@ -48,6 +50,34 @@ export default function ServicesGrid() {
           </motion.div>
         ))}
       </div>
+
+      {block?.abilities?.length > 0 && (
+        <div className="mt-16">
+          {block.offer && (
+            <div className="card-tb p-6 md:p-7 mb-10 flex gap-5 items-start">
+              <span className="w-1 self-stretch rounded-full bg-g1 flex-none" aria-hidden="true" />
+              <div>
+                <h3 className="card-title">{block.offer.title}</h3>
+                {block.offer.desc && <p className="text-body-sm mt-1">{block.offer.desc}</p>}
+              </div>
+            </div>
+          )}
+
+          {block.abilitiesTitle && (
+            <p className="text-body font-semibold mb-6">{block.abilitiesTitle}</p>
+          )}
+          {/* именно columns, а не grid: в гриде строки выравниваются по самому
+              высокому пункту и между короткими появляются рваные зазоры */}
+          <ul className="sm:columns-2 sm:gap-x-10 space-y-3">
+            {block.abilities.map((item) => (
+              <li key={item} className="flex gap-3 text-body-sm break-inside-avoid">
+                <span className="w-1.5 h-1.5 rounded-[2px] bg-g1 flex-shrink-0 mt-[9px]" aria-hidden="true" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </Section>
   );
 }
