@@ -135,14 +135,18 @@ export default function ServicePage() {
               aria-hidden="true"
             />
             {/* Фигура упирается в правый край и в низ блока, как в макете.
-                Кадр в макете ближе, чем наш кроп по пояс: чтобы голова заняла
-                те же ~40% высоты блока, портрет масштабируем крупнее рамки, а
-                низ прячем за её границей. */}
+                heroImageZoom > 1 масштабирует портрет крупнее рамки, а низ
+                прячет за её границей — нужно кадрам, снятым по пояс. */}
             <div
               className="absolute bottom-0 right-[2%] h-[400px] xl:h-[450px] overflow-hidden max-lg:hidden pointer-events-none"
               aria-hidden="true"
             >
-              <img src={heroImage} alt="" className="block h-[500px] xl:h-[600px] w-auto" />
+              <img
+                src={heroImage}
+                alt=""
+                className="block w-auto max-w-none"
+                style={{ height: `${100 * (content?.heroImageZoom || 1)}%` }}
+              />
             </div>
           </>
         )}
