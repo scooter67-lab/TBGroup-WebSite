@@ -48,6 +48,7 @@ export default function ServicePage() {
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
   const content = serviceContent[slug];
+  const heroImage = content?.heroImage;
   const { settings } = useSettings();
   const contacts = settings.contacts || {};
 
@@ -90,29 +91,91 @@ export default function ServicePage() {
         path={`/services/${slug}`}
       />
 
-      {/* Шапка: Ink-панель с цифровой сеткой */}
-      <section className="relative overflow-hidden bg-ink text-tx-inv">
+      {/* Шапка. У услуг с портретом — светлая панель по макету (Figma 13:2
+          в IODR8QhwkjHDpz4Ky89qFP), в тёмной теме тот же макет на ink.
+          Остальные услуги сохраняют прежнюю ink-панель. */}
+      <section
+        className={
+          heroImage
+            ? 'relative overflow-hidden bg-[#F2F7FE] text-tx dark:bg-[#1A1D44] dark:text-tx-inv lg:min-h-[480px]'
+            : 'relative overflow-hidden bg-ink text-tx-inv'
+        }
+      >
+        {heroImage && (
+          // в тёмном макете фон не ink, а тёмно-синий с градиентом вниз
+          <div
+            className="absolute inset-0 hidden dark:block pointer-events-none"
+            style={{ background: 'linear-gradient(180deg,#1F2352 0%,#1A1D44 100%)' }}
+            aria-hidden="true"
+          />
+        )}
         <div
-          className="absolute inset-0 bg-grid-ink pointer-events-none"
-          style={{ maskImage: 'radial-gradient(110% 100% at 25% 0%, #000 35%, transparent 75%)', WebkitMaskImage: 'radial-gradient(110% 100% at 25% 0%, #000 35%, transparent 75%)' }}
+          className={`absolute inset-0 pointer-events-none ${heroImage ? 'bg-grid-paper dark:bg-grid-ink' : 'bg-grid-ink'}`}
+          // в макете сетка идёт по всей площади; у прежней шапки она затухала
+          style={
+            heroImage
+              ? undefined
+              : { maskImage: 'radial-gradient(110% 100% at 25% 0%, #000 35%, transparent 75%)', WebkitMaskImage: 'radial-gradient(110% 100% at 25% 0%, #000 35%, transparent 75%)' }
+          }
           aria-hidden="true"
         />
-        <div className="container-tb relative py-14 md:py-20">
-          <Breadcrumbs items={[{ label: 'Услуги', href: '/#services' }, { label: shown.title }]} />
-          <motion.h1
-            initial={{ opacity: 1, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
-            className="heading-1 mb-4"
-          >
-            {shown.title}
-          </motion.h1>
-          <p className="text-lg md:text-xl text-tx-inv2 max-w-2xl">{shown.shortDescription}</p>
-          {content?.intro && (
-            <p className="mt-6 text-[15px] md:text-base text-tx-inv3 max-w-3xl text-justify [hyphens:auto]">
-              {content.intro}
+
+        {heroImage && (
+          <>
+            {/* бледно-голубые круги из макета: замер по референсу — на 16
+                единиц темнее фона, то есть почти на грани видимости */}
+            <div
+              className="absolute rounded-full bg-[#D9E9F8] dark:bg-white/[.035] pointer-events-none max-md:hidden"
+              style={{ width: 190, height: 190, left: '58%', top: -62 }}
+              aria-hidden="true"
+            />
+            <div
+              className="absolute rounded-full bg-[#DCEAF9] dark:bg-white/[.03] pointer-events-none max-md:hidden"
+              style={{ width: 330, height: 330, right: '1%', top: '14%' }}
+              aria-hidden="true"
+            />
+            {/* Фигура упирается в правый край и в низ блока, как в макете.
+                Кадр в макете ближе, чем наш кроп по пояс: чтобы голова заняла
+                те же ~40% высоты блока, портрет масштабируем крупнее рамки, а
+                низ прячем за её границей. */}
+            <div
+              className="absolute bottom-0 right-[2%] h-[400px] xl:h-[450px] overflow-hidden max-lg:hidden pointer-events-none"
+              aria-hidden="true"
+            >
+              <img src={heroImage} alt="" className="block h-[500px] xl:h-[600px] w-auto" />
+            </div>
+          </>
+        )}
+
+        <div className={`container-tb relative z-10 ${heroImage ? 'py-14 md:py-16 lg:py-20' : 'py-14 md:py-20'}`}>
+          {/* правое поле под фигуру, чтобы текст не уходил под неё */}
+          <div className={heroImage ? 'lg:max-w-[500px] xl:max-w-[620px]' : ''}>
+            <Breadcrumbs items={[{ label: 'Услуги', href: '/#services' }, { label: shown.title }]} />
+            <motion.h1
+              initial={{ opacity: 1, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
+              className="heading-1 mb-4"
+            >
+              {shown.title}
+            </motion.h1>
+            <p
+              className={`text-lg md:text-xl max-w-2xl ${heroImage ? 'text-tx dark:text-tx-inv' : 'text-tx-inv2'}`}
+            >
+              {shown.shortDescription}
             </p>
-          )}
+            {content?.intro && (
+              <p
+                className={
+                  heroImage
+                    ? 'mt-6 text-[15px] md:text-base text-tx2 dark:text-tx-inv2'
+                    : 'mt-6 text-[15px] md:text-base text-tx-inv3 max-w-3xl text-justify [hyphens:auto]'
+                }
+              >
+                {content.intro}
+              </p>
+            )}
+          </div>
         </div>
       </section>
 
